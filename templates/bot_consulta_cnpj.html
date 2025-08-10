@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Bot: Consulta CNPJs{% endblock %}
+
+{% block content %}
+    <h1>Bot: Consulta Automática de CNPJs</h1>
+
+    <section class="bot-description">
+        <p>
+            Consulta automaticamente dados cadastrais de uma lista de CNPJs a partir de um arquivo Excel.<br> 
+            Controla a taxa de consultas para evitar bloqueios da API.<br>
+            Gera um arquivo Excel consolidado com os resultados detalhados.<br>
+            Ideal para atualização e validação em massa de bases de dados empresariais.
+        </p>
+    </section>
+
+    <a href="{% url 'my_bots' %}" class="button" style="margin-top: 1.5rem;">← Voltar para Meus Bots</a>
+{% endblock %}

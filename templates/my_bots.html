@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Meus Bots{% endblock %}
+
+{% block content %}
+    <h2>Bots gerais</h2>
+
+    <div class="bot-grid">
+        <a href="{% url 'bot_processar_classificar' %}" class="bot-card button" aria-label="Conciliador">Conciliador</a>
+        <a href="{% url 'bot_consulta_cnpj' %}" class="bot-card button" aria-label="Consultar CNPJ">Consultar CNPJ</a>
+        <a href="{% url 'bot_dividir_excel' %}" class="bot-card button" aria-label="Dividir Excel">Dividir Excel</a>
+        <a href="{% url 'bot_limpar_formatos' %}" class="bot-card button" aria-label="Limpar Arquivos por Formato">Limpar Arquivos por Formato</a>
+        <a href="{% url 'bot_organizador_pastas' %}" class="bot-card button" aria-label="Organizar Pastas por Identificador">Organizador de Pastas</a>
+        <a href="{% url 'bot_mover_esocial' %}" class="bot-card button" aria-label="Organizar Arquivos eSocial">Organizar Arquivos eSocial</a>
+        <a href="{% url 'bot_mover_extensao' %}" class="bot-card button" aria-label="Mover Arquivos por Extensão">Mover Arquivos por Extensão</a>
+        <a href="{% url 'bot_unificar_excel' %}" class="bot-card button" aria-label="Unificar Excel da Pasta">Unificar Excel da Pasta</a>
+        <a href="{% url 'bot_tabulador_xml_fiscal' %}" class="bot-card button" aria-label="Tabular de documentos fiscais">Tabular de documentos fiscais</a>
+        <a href="{% url 'bot_divisor_pag_pdf' %}" class="bot-card button" aria-label="Divisor de PDF por página">Divisor de PDF por página</a>
+    </div>
+
+    <h2>Tabuladores</h2>
+
+    <div class="bot-grid">
+        <a href="{% url 'bot_tabulate_cfop' %}" class="bot-card button" aria-label="CFOP para excel">CFOP para excel</a>
+        <a href="{% url 'bot_tabulate_darf' %}" class="bot-card button" aria-label="DARF para excel">DARF para excel</a>
+        <a href="{% url 'bot_tabulate_recolhimentos' %}" class="bot-card button" aria-label="Recolhimentos para excel">Recohimentos para excel</a>
+        <a href="{% url 'bot_tabulate_dcomp' %}" class="bot-card button" aria-label="DCOMP para Excel">DCOMP para Excel</a>
+        <a href="{% url 'bot_tabulate_dctf' %}" class="bot-card button" aria-label="DCTF para excel">DCTF para excel</a>
+        <a href="{% url 'bot_tabulate_fonte_pagadora' %}" class="bot-card button" aria-label="Fonte pagadora para excel">Fonte pagadora para excel</a>
+        <a href="{% url 'bot_tabulate_ocr_free' %}" class="bot-card button" aria-label="Tabulate free">Tabulate free</a>
+    </div>
+
+    <a href="{% url 'home' %}" class="button" style="margin-top: 2rem; display: inline-block;">← Voltar</a>
+{% endblock %}

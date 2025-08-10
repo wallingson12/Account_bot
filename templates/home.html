@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+  <section style="text-align: center; max-width: 700px; margin: auto;">
+    <h1>Olá, seja bem-vindo ao Account Bot!</h1>
+    <p style="font-size: 1.2rem; color: #555; margin-top: 1rem;">
+      Aqui você encontra uma coleção de bots inteligentes para facilitar suas tarefas contábeis, 
+      desde conciliação até organização e análise de arquivos.
+    </p>
+    <p style="font-size: 1rem; color: #666; margin-top: 1rem;">
+      Explore, automatize e ganhe tempo para focar no que realmente importa no seu negócio.
+    </p>
+
+    <a href="{% url 'my_bots' %}" class="button" style="margin-top: 2rem;">Ver meus bots</a>
+
+    <!-- 👇 Novo botão para cadastro -->
+    <a href="{% url 'cadastrar_usuario' %}" class="button" 
+       style="margin-top: 1rem; display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; border-radius: 6px; text-decoration: none;">
+      Cadastrar novo usuário
+    </a>
+
+    <hr style="margin: 3rem 0; border: none; border-top: 1px solid #ddd;">
+
+    <section>
+      <h2>O que você pode fazer aqui?</h2>
+      <ul style="text-align: left; max-width: 400px; margin: 1rem auto; padding-left: 1.2rem;">
+        <li>✔️ Conciliar lançamentos financeiros automaticamente</li>
+        <li>✔️ Consultar CNPJs de forma prática e rápida</li>
+        <li>✔️ Dividir, unificar e organizar planilhas Excel</li>
+        <li>✔️ Mover arquivos por tipo e organizar pastas</li>
+        <li>✔️ E muito mais bots úteis para a sua rotina</li>
+      </ul>
+    </section>
+  </section>
+{% endblock %}

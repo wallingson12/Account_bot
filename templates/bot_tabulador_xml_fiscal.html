@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Bot: Tabulação de Notas Fiscais XML{% endblock %}
+
+{% block content %}
+    <h1>Bot: Tabulação Automática de Notas Fiscais XML</h1>
+
+    <section class="bot-description">
+        <p>
+            Processa automaticamente arquivos XML de notas fiscais eletrônicas brasileiras.<br>
+            Suporta modelos NF-e (55), NFC-e (65), CT-e (57) e MDF-e (58).<br>
+            Extrai e organiza os principais dados em tabelas para análise e conferência.<br>
+            Ideal para automatizar controle fiscal, contábil e gerencial com alta confiabilidade.
+        </p>
+    </section>
+
+    <a href="{% url 'my_bots' %}" class="button" style="margin-top: 1.5rem;">← Voltar para Meus Bots</a>
+{% endblock %}

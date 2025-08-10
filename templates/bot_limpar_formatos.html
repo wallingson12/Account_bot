@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Bot: Limpeza de Arquivos{% endblock %}
+
+{% block content %}
+    <h1>Bot: Limpeza de Arquivos por Formato</h1>
+
+    <section class="bot-description">
+        <p>
+            Limpa uma pasta e suas subpastas removendo todos os arquivos que não possuem a extensão especificada para manter.
+            Útil para organizar diretórios, eliminando arquivos desnecessários e mantendo apenas os tipos desejados, como PDFs, TXT, ou outros formatos.
+        </p>
+    </section>
+
+    <a href="{% url 'my_bots' %}" class="button" style="margin-top: 1.5rem;">← Voltar para Meus Bots</a>
+{% endblock %}

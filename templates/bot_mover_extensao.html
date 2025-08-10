@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Bot: Mover Arquivos{% endblock %}
+
+{% block content %}
+    <h1>Bot: Mover Arquivos</h1>
+
+    <section class="bot-description">
+        <p>
+            Move arquivos com uma extensão específica de uma pasta (e subpastas) para um destino definido.<br>
+            Evita sobrescritas renomeando arquivos duplicados e informa as extensões não processadas.
+        </p>
+    </section>
+
+    <a href="{% url 'my_bots' %}" class="button">← Voltar para Meus Bots</a>
+{% endblock %}

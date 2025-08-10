@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NFCe xmlns="http://www.portalfiscal.inf.br/nfe">
+  <infNFe versao="4.00" Id="NFe35123456789012345678901234567890123456789012">
+    <ide>
+      <cUF>35</cUF>
+      <cNF>87654321</cNF>
+      <natOp>Venda a consumidor</natOp>
+      <mod>65</mod>
+      <serie>1</serie>
+      <nNF>54321</nNF>
+      <dhEmi>2025-06-01T18:00:00-03:00</dhEmi>
+      <tpNF>1</tpNF>
+      <idDest>1</idDest>
+      <cMunFG>3550308</cMunFG>
+      <tpImp>4</tpImp>
+      <tpEmis>1</tpEmis>
+      <cDV>9</cDV>
+      <tpAmb>2</tpAmb>
+      <finNFe>1</finNFe>
+      <indFinal>1</indFinal>
+      <indPres>1</indPres>
+      <procEmi>0</procEmi>
+      <verProc>1.0</verProc>
+    </ide>
+    <emit>
+      <CNPJ>98765432000199</CNPJ>
+      <xNome>Loja Exemplo Ltda</xNome>
+      <enderEmit>
+        <xLgr>Rua das Flores</xLgr>
+        <nro>123</nro>
+        <xBairro>Centro</xBairro>
+        <cMun>3550308</cMun>
+        <xMun>São Paulo</xMun>
+        <UF>SP</UF>
+        <CEP>01001000</CEP>
+      </enderEmit>
+      <IE>1122334455</IE>
+      <CRT>1</CRT>
+    </emit>
+    <det nItem="1">
+      <prod>
+        <cProd>1001</cProd>
+        <xProd>Produto NFCe</xProd>
+        <NCM>98765432</NCM>
+        <CFOP>5102</CFOP>
+        <uCom>PC</uCom>
+        <qCom>5.00</qCom>
+        <vUnCom>30.00</vUnCom>
+        <vProd>150.00</vProd>
+      </prod>
+      <imposto>
+        <ICMS>
+          <ICMS00>
+            <orig>0</orig>
+            <CST>00</CST>
+            <modBC>3</modBC>
+            <vBC>150.00</vBC>
+            <pICMS>18.00</pICMS>
+            <vICMS>27.00</vICMS>
+          </ICMS00>
+        </ICMS>
+      </imposto>
+    </det>
+    <total>
+      <ICMSTot>
+        <vBC>150.00</vBC>
+        <vICMS>27.00</vICMS>
+        <vNF>150.00</vNF>
+      </ICMSTot>
+    </total>
+  </infNFe>
+</NFCe>

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Bot Unificador{% endblock %}
+
+{% block content %}
+    <h1>Bot: Unificador de Excel</h1>
+
+    <div class="bot-description">
+        <p>
+            Unifica todos os arquivos Excel (.xls, .xlsx) de uma pasta em um único arquivo 'unificados.xlsx'.<br>
+            Utiliza processamento paralelo para acelerar a leitura e gera relatórios simples de progresso.
+        </p>
+    </div>
+
+    <a href="{% url 'my_bots' %}" class="button">← Voltar para Meus Bots</a>
+{% endblock %}
