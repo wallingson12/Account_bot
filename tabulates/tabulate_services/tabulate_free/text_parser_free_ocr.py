@@ -1,8 +1,7 @@
 import re
-import pytesseract
+from ocr.ocr import config_map
 
 def parse_text_free(imagens, tipo):
-    from ocr import config_map  # certifica que tem acesso ao config_map
     all_rows = []
 
     if tipo not in config_map:

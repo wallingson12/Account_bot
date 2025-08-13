@@ -3,6 +3,8 @@ import pandas as pd
 from pdf2image import convert_from_path
 from ocr.ocr import preprocess_dctf_image, extract_ocr_data_from_image, config_map
 from .dctf_parser import  parse_text_dctf
+from pdf2image import convert_from_path
+import pdfplumber
 
 def extrair_dctf_pdf(caminho_pdf, usar_ocr=True, nome_saida_detalhamento='dctf_detalhamento.xlsx', dpi=600):
     """
@@ -18,8 +20,6 @@ def extrair_dctf_pdf(caminho_pdf, usar_ocr=True, nome_saida_detalhamento='dctf_d
         pd.DataFrame: DataFrame com os detalhes extraídos.
         list[str]: lista com textos extraídos de cada página/processamento.
     """
-
-    images = convert_from_path(caminho_pdf, dpi=dpi, first_page=3)
 
     padrao_detalhamento = {
         "GRUPO DO TRIBUTO": [],
@@ -39,7 +39,6 @@ def extrair_dctf_pdf(caminho_pdf, usar_ocr=True, nome_saida_detalhamento='dctf_d
     }
 
     dctf_detalhamento = {k: [] for k in padrao_detalhamento}
-
     all_texts = []
     soma_principal = 0
     soma_multas = 0
@@ -47,21 +46,27 @@ def extrair_dctf_pdf(caminho_pdf, usar_ocr=True, nome_saida_detalhamento='dctf_d
     novo_grupo = True
     grupo_atual = None
 
-    for img in images:
-        img = img.convert('RGB')
-
-        if usar_ocr:
+    if usar_ocr:
+        images = convert_from_path(caminho_pdf, dpi=dpi, first_page=3)
+        for img in images:
+            img = img.convert('RGB')
             processed_img = preprocess_dctf_image(img)
             text, confidence = extract_ocr_data_from_image(processed_img, 'dctf', config_map)
             print(f"OCR confidence média: {confidence:.2f}")
             print(text)
-        else:
-            text = ''
+            all_texts.append(text)
 
-        all_texts.append(text)
+            dctf_detalhamento, grupo_atual, novo_grupo, soma_principal, soma_multas, soma_juros = parse_text_dctf(
+                text, dctf_detalhamento, grupo_atual, novo_grupo, soma_principal, soma_multas, soma_juros)
+    else:
+        with pdfplumber.open(caminho_pdf) as pdf:
+            for pagina in pdf.pages[2:]:  # começa da página 3 (índice 2)
+                text = pagina.extract_text() or ""
+                all_texts.append(text)
+                print(text)
 
-        dctf_detalhamento, grupo_atual, novo_grupo, soma_principal, soma_multas, soma_juros = parse_text_dctf(
-            text, dctf_detalhamento, grupo_atual, novo_grupo, soma_principal, soma_multas, soma_juros)
+                dctf_detalhamento, grupo_atual, novo_grupo, soma_principal, soma_multas, soma_juros = parse_text_dctf(
+                    text, dctf_detalhamento, grupo_atual, novo_grupo, soma_principal, soma_multas, soma_juros)
 
     if not novo_grupo:
         dctf_detalhamento["Valor do Principal"].append(soma_principal)

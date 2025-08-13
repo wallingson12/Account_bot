@@ -43,12 +43,12 @@ PROCESSAR_DCOMP = False
 PROCESSAR_DCOMP_IPI = False
 PROCESSAR_RECOLHIMENTOS = False
 
+
 class Contador:
     def __init__(self, caminho_tesseract: str = None):
         self.caminho_tesseract = caminho_tesseract
         pytesseract.pytesseract.tesseract_cmd = self.caminho_tesseract
 
-        pass
 
     @log_de_erro
     def processar_e_classificar_unificado(self, path1, aba1, pular1, path2, aba2, pular2, cols1, cols2, dir_saida):
@@ -76,7 +76,7 @@ class Contador:
 
     @log_de_erro
     def dividir_excel(
-        self, arquivo_excel=None, coluna_divisao=None, diretorio_output=None
+            self, arquivo_excel=None, coluna_divisao=None, diretorio_output=None
     ):
 
         """Divide uma planilha Excel em múltimos arquivos, com base nos valores de uma coluna.
@@ -90,13 +90,13 @@ class Contador:
             None. Os arquivos resultantes são salvos diretamente no diretório especificado.
         """
         return dividir_planilha_por_coluna(
-                arquivo_excel=arquivo_excel,
-                coluna_divisao=coluna_divisao,
-                diretorio_output=diretorio_output,)
-    
+            arquivo_excel=arquivo_excel,
+            coluna_divisao=coluna_divisao,
+            diretorio_output=diretorio_output, )
+
     @log_de_erro
     def limpar_arquivos_por_formato(self, pasta_raiz=None, formato_manter=None):
-        
+
         """Remove arquivos de uma pasta, mantendo apenas os com o formato especificado.
 
         Parâmetros:
@@ -107,7 +107,7 @@ class Contador:
             None. Os arquivos não correspondentes ao formato são removidos diretamente da pasta.
         """
         return limpar_arquivos_por_formato(
-                pasta_raiz=pasta_raiz, formato_manter=formato_manter)
+            pasta_raiz=pasta_raiz, formato_manter=formato_manter)
 
     @log_de_erro
     def mover_arquivos_esocial(self, *args, **kwargs):
@@ -145,7 +145,7 @@ class Contador:
 
     @log_de_erro
     def mover_arquivos_por_extensao(
-        self, diretorio_raiz, pasta_output, extensao_desejada
+            self, diretorio_raiz, pasta_output, extensao_desejada
     ):
 
         """Move arquivos com uma determinada extensão de uma pasta (e seus subdiretórios) para uma pasta de saída.
@@ -216,7 +216,6 @@ class Contador:
         else:
             print("Nenhum dado encontrado nos PDFs.")
             return pd.DataFrame()
-
 
     @log_de_erro
     def processar_fontes_pagadoras(self, pasta_pdfs, usar_ocr=True):
@@ -312,7 +311,6 @@ class Contador:
             print("[OCR_FREE] OCR desativado. Pulando processamento.")
             return pd.DataFrame()
 
-        pytesseract.pytesseract.tesseract_cmd = caminho_tesseract
         todas_linhas = []
         arquivos_pdf = [f for f in os.listdir(pasta_pdfs) if f.lower().endswith('.pdf')]
 
@@ -393,7 +391,7 @@ class Contador:
             print(f"❌ Erro ao processar Recolhimentos: {e}")
             return pd.DataFrame()
 
-    @log_de_erro
+    # @log_de_erro
     def process_file_r11_r12(self, file_path):
         df = carregar_excel(file_path)
         df = validar_colunas_valores(df)

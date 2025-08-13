@@ -4,8 +4,6 @@ import numpy as np
 import cv2
 from PIL import Image
 from pytesseract import Output
-from config.config import caminho_tesseract
-import re
 
 POPPLER_PATH = None  # configure se necessário
 
