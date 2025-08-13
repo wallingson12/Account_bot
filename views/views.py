@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -43,24 +44,24 @@ def bot_divisor_pag_pdf(request):
 
 def bot_tabulate_cfop(request):
     return render(request, 'bot_tabulate_cfop.html')
-    
+
 def bot_tabulate_darf(request):
-    return (request, 'bot_tabulate_darf.html')
-    
+    return render(request, 'bot_tabulate_darf.html')
+
 def bot_tabulate_dcomp(request):
-    return (request, 'bot_tabulate_dcomp.html')
-    
+    return render (request, 'bot_tabulate_dcomp.html')
+
 def bot_tabulate_dctf(request):
-    return (request, 'bot_tabulate_dctf.html')
-    
+    return render(request, 'bot_tabulate_dctf.html')
+
 def bot_tabulate_fonte_pagadora(request):
-    return (request, 'bot_tabulate_fonte_pagadora.html')
+    return render(request, 'bot_tabulate_fonte_pagadora.html')
 
 def bot_tabulate_ocr_free(request):
-    return (request, 'bot_tabulate_ocr_free.html')
+    return render(request, 'bot_tabulate_ocr_free.html')
 
 def bot_tabulate_recolhimentos(request):
-    return (request, 'bot_tabulate_recolhimentos.html')
+    return render(request, 'bot_tabulate_recolhimentos.html')
 
 class TokenObtainPairWithIPView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):

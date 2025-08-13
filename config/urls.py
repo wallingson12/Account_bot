@@ -11,7 +11,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", home, name="home"),
+    path("home", home, name="home"),
     path("my-bots/", my_bots, name="my_bots"),
     path("bots/processar-classificar/", bot_processar_classificar, name="bot_processar_classificar"),
     path("bots/consulta-cnpj/", bot_consulta_cnpj, name="bot_consulta_cnpj"),

@@ -12,6 +12,10 @@ from account_tools.api import autenticar_api  # sua função de autenticação
 from config.config import caminho_tesseract
 
 # --- Dialog de Login ---
+from PySide6.QtGui import QDesktopServices
+from PySide6.QtCore import QUrl
+# ...
+
 class LoginDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -28,18 +32,15 @@ class LoginDialog(QDialog):
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                 stop:0 #e3f2fd, stop:1 #bbdefb);
                 }
-
             QLabel {
                font-weight: bold;
                qproperty-alignment: 'AlignCenter';
                }
-
             QLineEdit {
                 padding: 6px;
                 border: 1px solid #ccc;
                 border-radius: 4px;
             }
-
             QPushButton {
                 background-color: #0078d7;
                 color: white;
@@ -50,13 +51,17 @@ class LoginDialog(QDialog):
             QPushButton:hover {
                 background-color: #005fa3;
             }
-
             QPushButton#cancelar {
                 background-color: #aaa;
             }
-
             QPushButton#cancelar:hover {
                 background-color: #888;
+            }
+            QPushButton#cadastrar {
+                background-color: #4caf50;
+            }
+            QPushButton#cadastrar:hover {
+                background-color: #388e3c;
             }
         """)
 
@@ -84,12 +89,16 @@ class LoginDialog(QDialog):
         btn_ok = QPushButton("Entrar")
         btn_cancel = QPushButton("Cancelar")
         btn_cancel.setObjectName("cancelar")
+        btn_cadastrar = QPushButton("Cadastrar")
+        btn_cadastrar.setObjectName("cadastrar")
 
         btn_ok.clicked.connect(self.accept_login)
         btn_cancel.clicked.connect(self.reject)
+        btn_cadastrar.clicked.connect(self.abrir_cadastro)
 
         btns.addWidget(btn_ok)
         btns.addWidget(btn_cancel)
+        btns.addWidget(btn_cadastrar)
 
         layout_principal.addLayout(layout_form)
         layout_principal.addLayout(btns)
@@ -103,6 +112,8 @@ class LoginDialog(QDialog):
             return
         self.accept()
 
+    def abrir_cadastro(self):
+        QDesktopServices.openUrl(QUrl("http://localhost:8000/auth/cadastrar/"))
 
 # --- Interface Principal ---
 class ContadorGUI(QWidget):
@@ -113,8 +124,10 @@ class ContadorGUI(QWidget):
 
         self.setWindowTitle("Interface Contador")
         self.setFixedSize(600, 500)
+
         qr = self.frameGeometry()
         cp = QApplication.primaryScreen().availableGeometry().center()
+
         self.setStyleSheet("""
             QWidget {
                 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -154,6 +167,15 @@ class ContadorGUI(QWidget):
         """)
 
         layout = QVBoxLayout()
+
+        btn_sobre = QPushButton("Sobre")
+
+        # Função normal dentro do __init__, sem self
+        def abrir_sobre():
+            QDesktopServices.openUrl(QUrl("http://127.0.0.1:8000/home"))
+
+        btn_sobre.clicked.connect(abrir_sobre)
+        layout.addWidget(btn_sobre, alignment=Qt.AlignRight)
 
         pix = QPixmap(r"assets\D2X.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         icon_label = QLabel()
