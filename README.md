@@ -1,65 +1,75 @@
-# 🧠 Account Bot
+<h1 align="center">🧠 Account Bot</h1>
 
-Automatize tarefas contábeis com o poder do Python. Este projeto une uma interface web em Django com autenticação via JWT a um conjunto robusto de ferramentas que agilizam rotinas como conciliação de planilhas, consulta de CNPJs, manipulação de arquivos XML e muito mais.
+<p align="center">
+Automatize tarefas contábeis com <strong>Python</strong> de forma rápida e eficiente!
+</p>
 
 ---
 
-## 🚀 Funcionalidades
+## 🚀 Funcionalidades Principais
 
-A classe `Contador` centraliza todas as ações automatizadas:
+A classe <code>Contador</code> centraliza todas as automações:
 
 ### 📊 Planilhas Excel
-
-- **processar_e_classificar_unificado**  
-  Realiza conciliação e classificação entre duas planilhas com base em colunas chave.
-
-- **dividir_excel**  
-  Divide uma planilha com base em valores de uma coluna, gerando múltiplos arquivos.
-
-- **unificar_excel_da_pasta**  
-  Une todos os arquivos `.xls` e `.xlsx` de uma pasta em um único arquivo consolidado.
-
----
+- 🟢 **Conciliação e Classificação** (`processar_e_classificar_unificado`)  
+  Compara e classifica planilhas automaticamente com base em colunas-chave.
+- 🟢 **Divisão de Planilhas** (`dividir_excel`)  
+  Divide uma planilha em múltiplos arquivos com base nos valores de uma coluna.
+- 🟢 **Unificação de Planilhas** (`unificar_excel_da_pasta`)  
+  Une todos os arquivos Excel de uma pasta em um único arquivo consolidado.
 
 ### 🧾 Arquivos XML
-
-- **mover_arquivos_esocial**  
-  Move todos ou metade dos arquivos XML da pasta base para a pasta destino.
-
-- **organizar_xml_por_data**  
-  Lê a data de emissão dos XMLs (tags como `dhEmi`, `dEmi`, `perApur`) e os organiza em subpastas por ano ou mês/ano.
-
----
+- 🔵 **Movimentação de arquivos eSocial** (`mover_arquivos_esocial`)  
+  Move todos ou metade dos arquivos XML de uma pasta para outra.
+- 🔵 **Organização por Data** (`organizar_xml_por_data`)  
+  Cria subpastas por ano ou mês/ano, com base na data de emissão (`dhEmi`, `dEmi`, `perApur`).
 
 ### 🗃️ Organização de Arquivos
-
-- **limpar_arquivos_por_formato**  
-  Remove arquivos que não possuem uma extensão específica em uma pasta.
-
-- **mover_arquivos_por_extensao**  
-  Move todos os arquivos com uma extensão desejada para uma nova pasta.
-
----
+- 🟡 **Limpeza por formato** (`limpar_arquivos_por_formato`)  
+  Mantém apenas arquivos com extensões específicas.
+- 🟡 **Movimentação por extensão** (`mover_arquivos_por_extensao`)  
+  Move arquivos para pasta de destino, evitando sobrescritas.
 
 ### 🧠 Consulta de Dados
+- 🟣 **Consulta de CNPJs** (`consulta_cnpj`)  
+  Consulta automática de dados cadastrais em planilhas Excel.
 
-- **consulta_cnpj**  
-  Consulta dados cadastrais de CNPJs contidos em um arquivo Excel e salva os resultados em um novo arquivo.
+### 📄 Processamento de PDFs
+- 📝 **Divisão de PDFs** (`dividir_pdf`)  
+- 🔹 **Processamento OCR avançado**:
+  - DCTF (`processar_pdfs_dctf`)
+  - Fontes Pagadoras (`processar_fontes_pagadoras`)
+  - DARF (`processar_darf_pdfs`)
+  - OCR Livre (`processar_pdfs_ocr_free`)
+  - CFOP (`processar_cfop_pdfs`)
+  - DCOMP (`processar_dcomp_pdfs`)
+  - DCOMP IPI (`processar_dcomp_ipi_pdfs`)
+  - Recolhimentos (`processar_recolhimentos_pdfs`)
+
+> Todos os módulos suportam **OCR via Tesseract** e pré-processamento de imagens para extração precisa de dados.
+
+### 📝 Processamento Especial R11/R12
+- Geração automática de arquivos TXT a partir de planilhas Excel específicas, com validação e formatação.
 
 ---
 
 ## ⚙️ Tecnologias
 
-- **Backend**: Django + Django REST Framework + SimpleJWT  
-- **Manipulação de dados**: `pandas`, `openpyxl`  
-- **Web scraping e requests**: `requests`, `xml.etree.ElementTree`, `re`, `shutil`  
-- **Interface Web**: Django Templates com rotas estilizadas e protegidas
+- **Backend:** Django + Django REST Framework + SimpleJWT  
+- **Manipulação de dados:** pandas, openpyxl  
+- **PDF & OCR:** pytesseract, pdf2image, OpenCV  
+- **Web scraping & requests:** requests, xml.etree.ElementTree, shutil, re  
+- **Interface Web:** Django Templates com rotas protegidas e estilizadas  
+- **API REST:** endpoints JWT para autenticação
+
+**Endpoints principais da API:**
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST   | `/api/token/` | Gera tokens JWT (access e refresh) |
+| POST   | `/api/token/refresh/` | Atualiza token de acesso usando refresh |
 
 ---
 
-🔐 API REST com JWT
-A aplicação expõe uma API REST para autenticação e integração programática usando JSON Web Tokens (JWT), com os seguintes endpoints:
-
-Método	Endpoint	Descrição
-POST	/api/token/	Gera tokens JWT (access e refresh)
-POST	/api/token/refresh/	Atualiza o token de acesso usando o refresh
+<p align="center">
+💡 <strong>Demonstre o poder da automação contábil e ganhe tempo com o Account Bot!</strong>
+</p>
