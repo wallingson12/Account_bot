@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NFe xmlns="http://www.portalfiscal.inf.br/nfe">
+  <infNFe Id="NFe12345678901234567890123456789012345678901234" versao="4.00">
+    <ide>
+      <cUF>35</cUF>
+      <cNF>12345678</cNF>
+      <natOp>Venda de mercadoria</natOp>
+      <mod>55</mod>
+      <serie>1</serie>
+      <nNF>12345</nNF>
+      <dhEmi>2025-06-01T14:30:00-03:00</dhEmi>
+      <tpNF>1</tpNF>
+      <idDest>1</idDest>
+      <cMunFG>3550308</cMunFG>
+      <tpImp>1</tpImp>
+      <tpEmis>1</tpEmis>
+      <cDV>5</cDV>
+      <tpAmb>2</tpAmb>
+      <finNFe>1</finNFe>
+      <indFinal>1</indFinal>
+      <indPres>1</indPres>
+      <procEmi>0</procEmi>
+      <verProc>1.0</verProc>
+    </ide>
+    <emit>
+      <CNPJ>12345678000199</CNPJ>
+      <xNome>Empresa Emitente Ltda</xNome>
+      <enderEmit>
+        <xLgr>Rua Exemplo</xLgr>
+        <nro>1000</nro>
+        <xBairro>Centro</xBairro>
+        <cMun>3550308</cMun>
+        <xMun>São Paulo</xMun>
+        <UF>SP</UF>
+        <CEP>01001000</CEP>
+      </enderEmit>
+      <IE>1234567890</IE>
+      <CRT>3</CRT>
+    </emit>
+    <dest>
+      <CNPJ>99887766000155</CNPJ>
+      <xNome>Cliente Exemplo SA</xNome>
+      <enderDest>
+        <xLgr>Av Teste</xLgr>
+        <nro>500</nro>
+        <xBairro>Jardim</xBairro>
+        <cMun>3550308</cMun>
+        <xMun>São Paulo</xMun>
+        <UF>SP</UF>
+        <CEP>02002000</CEP>
+      </enderDest>
+      <indIEDest>1</indIEDest>
+      <IE>987654321</IE>
+    </dest>
+    <det nItem="1">
+      <prod>
+        <cProd>0001</cProd>
+        <xProd>Produto Teste</xProd>
+        <NCM>12345678</NCM>
+        <CFOP>5102</CFOP>
+        <uCom>UN</uCom>
+        <qCom>10.00</qCom>
+        <vUnCom>50.00</vUnCom>
+        <vProd>500.00</vProd>
+      </prod>
+      <imposto>
+        <ICMS>
+          <ICMS00>
+            <orig>0</orig>
+            <CST>00</CST>
+            <modBC>3</modBC>
+            <vBC>500.00</vBC>
+            <pICMS>18.00</pICMS>
+            <vICMS>90.00</vICMS>
+          </ICMS00>
+        </ICMS>
+        <PIS>
+          <PISAliq>
+            <vBC>500.00</vBC>
+            <pPIS>1.65</pPIS>
+            <vPIS>8.25</vPIS>
+          </PISAliq>
+        </PIS>
+        <COFINS>
+          <COFINSAliq>
+            <vBC>500.00</vBC>
+            <pCOFINS>7.60</pCOFINS>
+            <vCOFINS>38.00</vCOFINS>
+          </COFINSAliq>
+        </COFINS>
+      </imposto>
+    </det>
+    <total>
+      <ICMSTot>
+        <vBC>500.00</vBC>
+        <vICMS>90.00</vICMS>
+        <vPIS>8.25</vPIS>
+        <vCOFINS>38.00</vCOFINS>
+        <vNF>500.00</vNF>
+      </ICMSTot>
+    </total>
+  </infNFe>
+</NFe>
