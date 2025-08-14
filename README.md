@@ -90,7 +90,7 @@ Se você prefere rodar a aplicação de forma simples, sem se preocupar em insta
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/seuusuario/account-bot.git
+git clone https://github.com/wallingson12/account-bot.git
 cd account-bot
 
 Buildar a imagem Docker (garantindo que tudo está atualizado):
