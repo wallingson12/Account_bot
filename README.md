@@ -80,3 +80,24 @@ pip install -r requirements.txt
 
 # 4. Rodar a aplicação Django
 python manage.py runserver
+
+## 🐳 Rodando com Docker
+
+Se você prefere rodar a aplicação de forma simples, sem se preocupar em instalar Python, bibliotecas e configurar ambiente, pode usar Docker. Basta ter o Docker instalado na sua máquina.
+
+### Passos para rodar com Docker
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/seuusuario/account-bot.git
+cd account-bot
+
+Buildar a imagem Docker (garantindo que tudo está atualizado):
+docker build -t account_bot .
+
+Rodar o container:
+docker run --name account_bot -p 8000:8000 account_bot
+
+Agora abra no navegador:
+http://localhost:8000
