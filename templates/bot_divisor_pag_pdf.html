@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Bot: Divisor de PDF{% endblock %}
+
+{% block content %}
+    <h1>Bot: Divisor de PDF</h1>
+
+    <section class="bot-description">
+        <p>
+            Faça upload de um arquivo PDF para dividir em vários arquivos menores.<br>
+            Você pode escolher dividir por página ou em blocos com número específico de páginas (ex: 20 em 20).<br>
+            Ideal para organizar documentos grandes em partes menores.
+        </p>
+    </section>
+
+    {% if arquivos %}
+        <h2>Arquivos gerados:</h2>
+        <ul>
+            {% for arquivo in arquivos %}
+                <li><a href="{{ arquivo.url }}" download>{{ arquivo.nome }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{% url 'my_bots' %}" class="button" style="margin-top: 1.5rem;">← Voltar para Meus Bots</a>
+
+{% endblock %}

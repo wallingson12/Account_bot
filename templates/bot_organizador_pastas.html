@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Bot: Organizador de Pastas{% endblock %}
+
+{% block content %}
+    <h1>Bot: Organizador de Pastas</h1>
+
+    <div class="bot-description">
+        <p>
+            Organiza arquivos dentro de pastas consolidadas por identificadores.<br>
+            Move arquivos XML, Excel e outros para subpastas específicas, evitando duplicatas.<br>
+            Automatiza a estruturação de arquivos em diretórios separados por tipo.
+        </p>
+    </div>
+
+    <a href="{% url 'my_bots' %}" class="button">← Voltar para Meus Bots</a>
+{% endblock %}

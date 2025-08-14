@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Bot: Conciliador{% endblock %}
+
+{% block content %}
+    <h1>Bot: Conciliador</h1>
+
+    <div class="bot-description">
+        <p>
+            Compara e classifica dados de duas planilhas Excel usando chaves compostas personalizadas.<br>
+            Gera arquivos classificados destacando registros corretos, duplicados, a incluir ou a estudar,
+            facilitando a análise e auditoria dos dados.
+        </p>
+    </div>
+
+    <a href="{% url 'my_bots' %}" class="button">← Voltar para Meus Bots</a>
+{% endblock %}

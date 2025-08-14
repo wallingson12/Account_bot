@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmação de Código{% endblock %}
+
+{% block content %}
+
+<h2>Confirme seu cadastro</h2>
+
+{% if erro %}
+  <p style="color: red;">{{ erro }}</p>
+{% elif mensagem %}
+  <p style="color: green;">{{ mensagem }}</p>
+{% else %}
+  <p>Um código foi enviado para o e-mail {{ email }}</p>
+{% endif %}
+
+{% if tempo_expirado %}
+  <p style="color: red;">Código expirado</p>
+{% else %}
+  <p>Tempo restante para o código expirar: <span id="tempo-formatado">{{ tempo_formatado }}</span></p>
+{% endif %}
+
+<p>Tentativas: {{ tentativas }} de 3</p>
+
+<form method="post" action="{% url 'confirmar_cadastro' %}">
+    {% csrf_token %}
+    <label for="codigo">Digite o código de 6 dígitos:</label>
+    <input type="text" id="codigo" name="codigo" maxlength="6" required pattern="\d{6}" title="Digite um código numérico de 6 dígitos">
+    <button type="submit">Confirmar</button>
+</form>
+
+<form method="post" action="{% url 'reenviar_codigo' %}" style="margin-top: 15px;">
+    {% csrf_token %}
+    <button type="submit">Reenviar código</button>
+</form>
+
+{% if not tempo_expirado %}
+<script>
+  let tempoRestante = {{ tempo_restante|default:0 }};
+  const tempoSpan = document.getElementById("tempo-formatado");
+
+  function atualizarTempo() {
+      if (tempoRestante <= 0) {
+          tempoSpan.innerText = "00:00";
+          clearInterval(intervalo);
+          return;
+      }
+
+      const minutos = String(Math.floor(tempoRestante / 60)).padStart(2, '0');
+      const segundos = String(tempoRestante % 60).padStart(2, '0');
+      tempoSpan.innerText = `${minutos}:${segundos}`;
+      tempoRestante--;
+  }
+
+  const intervalo = setInterval(atualizarTempo, 1000);
+  atualizarTempo();
+</script>
+{% endif %}
+
+{% endblock %}

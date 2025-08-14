@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Bot: Divisor de PDF{% endblock %}
+
+{% block content %}
+    <h1>Bot: Divisor de PDF</h1>
+
+    <section class="bot-description">
+        <p>
+            Faça upload de um arquivo PDF para dividir em vários arquivos menores.<br>
+            Você pode escolher dividir por página ou em blocos com número específico de páginas (ex: 20 em 20).<br>
+            Ideal para organizar documentos grandes em partes menores.
+        </p>
+    </section>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="pdf_file">Selecione o arquivo PDF:</label><br>
+        <input type="file" id="pdf_file" name="pdf_file" accept="application/pdf" required><br><br>
+
+        <label>Como deseja dividir o PDF?</label><br>
+        <input type="radio" id="por_pagina" name="dividir_por" value="pagina" checked>
+        <label for="por_pagina">Por página</label><br>
+
+        <input type="radio" id="por_blocos" name="dividir_por" value="blocos">
+        <label for="por_blocos">Por número de páginas</label><br><br>
+
+        <div id="input_blocos" style="display:none;">
+            <label for="num_paginas">Número de páginas por arquivo:</label><br>
+            <input type="number" id="num_paginas" name="num_paginas" min="1" value="20"><br><br>
+        </div>
+
+        <button type="submit">Dividir PDF</button>
+    </form>
+
+    {% if arquivos %}
+        <h2>Arquivos gerados:</h2>
+        <ul>
+            {% for arquivo in arquivos %}
+                <li><a href="{{ arquivo.url }}" download>{{ arquivo.nome }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{% url 'my_bots' %}" class="button" style="margin-top: 1.5rem;">← Voltar para Meus Bots</a>
+
+    <script>
+        // Mostrar ou esconder input de número de páginas dependendo da escolha
+        const radios = document.querySelectorAll('input[name="dividir_por"]');
+        const inputBlocos = document.getElementById('input_blocos');
+
+        radios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                if(document.getElementById('por_blocos').checked) {
+                    inputBlocos.style.display = 'block';
+                } else {
+                    inputBlocos.style.display = 'none';
+                }
+            });
+        });
+    </script>
+{% endblock %}
