@@ -1,65 +1,82 @@
 # 🧠 Account Bot
 
-Automatize tarefas contábeis com o poder do **Python**.  
+Automatize tarefas contábeis com o poder do Python.  
 Este projeto une uma interface web em **Django** com autenticação via **JWT** a um conjunto robusto de ferramentas que agilizam rotinas como conciliação de planilhas, consulta de CNPJs, manipulação de arquivos XML e muito mais.
 
 ---
 
 ## 🚀 Funcionalidades
 
-A classe **`Contador`** centraliza todas as ações automatizadas:
+A classe `Contador` centraliza todas as ações automatizadas:
 
 ### 📊 Planilhas Excel
-- **processar_e_classificar_unificado**: concilia e classifica planilhas com base em colunas chave.  
-- **dividir_excel**: divide uma planilha com base em valores de uma coluna, gerando múltiplos arquivos.  
-- **unificar_excel_da_pasta**: une todos os arquivos Excel de uma pasta em um único arquivo consolidado.  
+- **processar_e_classificar_unificado** — Concilia e classifica duas planilhas com base em colunas chave.  
+- **dividir_excel** — Divide uma planilha em múltiplos arquivos com base em valores de uma coluna.  
+- **unificar_excel_da_pasta** — Une todos os arquivos `.xls` e `.xlsx` de uma pasta em um único arquivo consolidado.  
 
 ### 🧾 Arquivos XML
-- **mover_arquivos_esocial**: move todos ou metade dos arquivos XML de uma pasta para outra.  
-- **organizar_xml_por_data**: organiza XMLs em subpastas por ano ou mês/ano, com base na data de emissão.  
+- **mover_arquivos_esocial** — Move todos ou metade dos arquivos XML de uma pasta para outra.  
+- **organizar_xml_por_data** — Lê a data de emissão dos XMLs (`dhEmi`, `dEmi`, `perApur`) e organiza em subpastas por ano ou mês/ano.  
 
 ### 🗃️ Organização de Arquivos
-- **limpar_arquivos_por_formato**: mantém apenas arquivos com a extensão desejada.  
-- **mover_arquivos_por_extensao**: move arquivos para uma pasta de destino, evitando sobrescritas.  
+- **limpar_arquivos_por_formato** — Remove arquivos que não possuem uma extensão específica.  
+- **mover_arquivos_por_extensao** — Move arquivos de uma extensão específica para outra pasta.  
+
+### 📄 PDFs e OCR
+- **processar_pdfs_dctf** — Extrai dados estruturados de PDFs DCTF.  
+- **processar_fontes_pagadoras** — Extrai dados estruturados de PDFs de Fontes pagadoras.  
+- **processar_darf_pdfs** — Extrai dados estruturados de PDFs de DARFs.  
+- **processar_pdfs_ocr_free** — OCR genérico para PDFs livres.  
+- **processar_cfop_pdfs** — Extrai valores CFOP de PDFs fiscais.  
+- **processar_dcomp_pdfs** — Extrai dados estruturados de PDFs de DCOMP.  
+- **processar_dcomp_ipi_pdfs** — Extrai dados estruturados de PDFs de Dcomp.  
+- **processar_recolhimentos_pdfs** — Extrai dados estruturados de PDFs de extratos de recolhimentos.  
 
 ### 🧠 Consulta de Dados
-- **consulta_cnpj**: consulta dados cadastrais de CNPJs em uma planilha e gera resultado consolidado.  
-
-### 📄 Processamento de PDFs
-- **dividir_pdf**: divide PDFs em páginas.  
-- **processamento OCR avançado**:  
-  - DCTF (`processar_pdfs_dctf`)  
-  - Fontes Pagadoras (`processar_fontes_pagadoras`)  
-  - DARF (`processar_darf_pdfs`)  
-  - OCR Livre (`processar_pdfs_ocr_free`)  
-  - CFOP (`processar_cfop_pdfs`)  
-  - DCOMP (`processar_dcomp_pdfs`)  
-  - DCOMP IPI (`processar_dcomp_ipi_pdfs`)  
-  - Recolhimentos (`processar_recolhimentos_pdfs`)  
-
-> Todos os módulos suportam **OCR via Tesseract** e pré-processamento de imagens, garantindo extração precisa de dados.
-
-### 📝 Processamento Especial R11/R12
-- Geração de arquivos TXT a partir de planilhas Excel, com validação e formatação automática.
+- **consulta_cnpj** — Consulta dados cadastrais de CNPJs contidos em um arquivo Excel e salva o resultado em um novo arquivo.  
 
 ---
+### 📄 Arquivos de texto
+- **process_file_r11_r12** — Gera arquivo de importação na dcomp  
 
 ## ⚙️ Tecnologias
-
-- **Backend:** Django + Django REST Framework + SimpleJWT  
-- **Manipulação de dados:** pandas, openpyxl  
-- **PDF & OCR:** pytesseract, pdf2image, OpenCV  
-- **Web scraping & requests:** requests, xml.etree.ElementTree, shutil, re  
-- **Interface Web:** Django Templates com rotas protegidas  
-- **API REST:** endpoints JWT para autenticação
-
-**Endpoints principais da API:**
-
-| Método | Endpoint | Descrição |
-|--------|----------|-----------|
-| POST   | `/api/token/` | Gera tokens JWT (access e refresh) |
-| POST   | `/api/token/refresh/` | Atualiza token de acesso usando refresh |
+- **Backend**: Django + Django REST Framework + SimpleJWT  
+- **Manipulação de dados**: `pandas`, `openpyxl`  
+- **OCR e PDFs**: `pytesseract`, `pdfplumber`, `pdf2image`, `opencv-python`  
+- **Web scraping e requests**: `requests`, `xml.etree.ElementTree`, `re`, `shutil`  
+- **Interface Web**: Django Templates com rotas estilizadas e protegidas  
 
 ---
 
-💡 Automatize suas rotinas contábeis com **Account Bot** e ganhe tempo em tarefas repetitivas.
+## 🔐 API REST com JWT
+
+A aplicação expõe uma API REST para autenticação e integração programática usando JSON Web Tokens (JWT):
+
+| Método | Endpoint              | Descrição                                    |
+|--------|-----------------------|----------------------------------------------|
+| POST   | `/api/token/`         | Gera tokens JWT (access e refresh)           |
+| POST   | `/api/token/refresh/` | Atualiza o token de acesso usando o refresh  |
+
+---
+
+## ⚡ Guia Rápido
+
+### 📥 Instalação
+
+```bash
+# 1. Clonar o repositório
+git clone https://github.com/seuusuario/account-bot.git
+cd account-bot
+
+# 2. Criar e ativar ambiente virtual (opcional)
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# Linux/Mac
+source venv/bin/activate
+
+# 3. Instalar dependências
+pip install -r requirements.txt
+
+# 4. Rodar a aplicação Django
+python manage.py runserver
