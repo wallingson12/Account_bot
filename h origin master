@@ -1,0 +1,33 @@
+[33mab2bb5a[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m Aplicando testes
+Test/test_combinations.py
+Test/teste_backend.py
+Tests.py
+account_tools/utils/__init__.py
+account_tools/utils/__init__py
+account_tools/utils/utils.py
+dctf_detalhamento.xlsx
+files/CFOP/CFOP_Consolidado.xlsx
+files/CFOP/resultado_dctf.xlsx
+files/DARF/teste2/A73 - Comprovantes de Pgto CSLL - 2024.pdf
+files/DARF/teste2/A73 - Comprovantes de Pgto IRPJ - 2024.pdf
+files/DARF/teste2/DARF_Consolidado.xlsx
+files/DARF/teste2/Lote 1.pdf
+files/DARF/teste2/Lote 2.pdf
+files/DARF/teste2/Lote 3.pdf
+files/DARF/teste2/Lote 4.pdf
+files/DARF/teste2/Lote 5.pdf
+files/DARF/teste2/Lote 6.pdf
+files/DARF/teste2/Lote 7.pdf
+files/DARF/teste2/Lote 8.pdf
+files/DCTF/resultado_dctf.xlsx
+files/OCR_FREE/teste/RAZAO.pdf
+freeze
+gerar_excel/gerar_excel.py
+main.py
+ocr/ocr.py
+tabulates/tabulate_services/darf/processor_darf.py
+tabulates/tabulate_services/dcomp/processor_dcomp.py
+tabulates/tabulate_services/dctf/dctf_processor.py
+tabulates/tabulate_services/fonte_pagadora/processor_fonte_pagadora.py
+tabulates/tabulate_services/tabulate_free/text_parser_free_ocr.py
+tabulates/tests.py

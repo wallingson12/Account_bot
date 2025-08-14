@@ -7,7 +7,16 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
 
-from main import Contador  # sua classe original
+import sys
+import os
+
+if getattr(sys, 'frozen', False):
+    BASE_DIR = sys._MEIPASS
+    sys.path.append(BASE_DIR)  # adiciona a raiz do executável aos imports
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+from main import Contador
 from account_tools.api import autenticar_api  # sua função de autenticação
 from config.config import caminho_tesseract
 
