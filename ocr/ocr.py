@@ -75,11 +75,12 @@ def preprocess_dctf_image(image):
     img_np = np.array(image)
     img_np = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)  # Corrige canais
     gray = cv2.cvtColor(img_np, cv2.COLOR_BGR2GRAY)
+    gray = cv2.equalizeHist(gray)
     adaptive_thresh = cv2.adaptiveThreshold(
         gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         cv2.THRESH_BINARY, 11, 2
     )
-    kernel = np.ones((2, 2), np.uint8)
+    kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (2, 2))
     dilated = cv2.dilate(adaptive_thresh, kernel, iterations=1)
     eroded = cv2.erode(dilated, kernel, iterations=2)
     processed_img = Image.fromarray(eroded)

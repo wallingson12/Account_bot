@@ -391,7 +391,7 @@ class Contador:
             print(f"❌ Erro ao processar Recolhimentos: {e}")
             return pd.DataFrame()
 
-    # @log_de_erro
+    @log_de_erro
     def process_file_r11_r12(self, file_path):
         df = carregar_excel(file_path)
         df = validar_colunas_valores(df)

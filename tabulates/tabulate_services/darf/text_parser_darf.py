@@ -30,15 +30,32 @@ def create_record(filename, page_number, cnpj, razao_social, period_start, due_d
                   document_number, match, reserved_value):
     codigo = match[0]
     descricao = clean_description(match[1])
+
+    # valores string formatados
     principal = clean_value(match[2])
     multa = clean_value(match[3])
     juros = clean_value(match[4])
-    total = clean_value(match[5])
 
-    is_total = 'TOTAIS' in descricao.upper()
-
-    if is_total:
+    # ignora linha de totais
+    if 'TOTAIS' in descricao.upper():
         return None
+
+    # converter para float para comparação e soma
+    principal_f = value_to_float(principal)
+    multa_f = value_to_float(multa)
+    juros_f = value_to_float(juros)
+
+    # regra: se Multa ou Juros ≈ Principal → zera
+    if abs(multa_f - principal_f) < 0.01:
+        multa_f, multa = 0.0, "0,00"
+    if abs(juros_f - principal_f) < 0.01:
+        juros_f, juros = 0.0, "0,00"
+
+    # recalcular total
+    total_f = principal_f + multa_f + juros_f
+
+    # formata total no padrão BR (X.XXX,XX)
+    total = f"{total_f:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
     return {
         "Arquivo": filename,
@@ -48,12 +65,12 @@ def create_record(filename, page_number, cnpj, razao_social, period_start, due_d
         "Período Apuração": period_start,
         "Data de Vencimento": due_date,
         "Data de Arrecadação": collection_date,
-        "Número de Documento": document_number,
+        "Número de Documento": clean_document_number(document_number),
         "Código": codigo,
         "Descrição": descricao,
         "Principal": principal,
         "Multa": multa,
         "Juros": juros,
         "Total": total,
-        "Valor Reservado/Restituído": reserved_value
+        "Valor Reservado/Restituído": clean_value(reserved_value)
     }

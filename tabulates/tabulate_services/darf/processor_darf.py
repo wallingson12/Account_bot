@@ -9,7 +9,7 @@ def extrair_infos_darf(pdf_path, filename, usar_ocr=False):
     records = []
 
     if usar_ocr:
-        images = convert_from_path(pdf_path, dpi=300)
+        images = convert_from_path(pdf_path, dpi=500)
         for page_number, img in enumerate(images, start=1):
             print(f"=== Página {page_number} ===")
             img = img.convert('RGB')
