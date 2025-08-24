@@ -6,6 +6,13 @@ __pycache__/
 *.sqlite3
 *.env
 
+# Ignorar builds e arquivos grandes
+build/
+dist/
+file/
+*.pkg
+*.pyz
+
 # Editor
 .vscode/
 .idea/
@@ -19,4 +26,6 @@ desktop.ini
 *.log
 *.zip
 *.xlsb
+*.xlsx
+*.spec
 *.txt
