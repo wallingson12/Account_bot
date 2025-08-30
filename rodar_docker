@@ -1,0 +1,13 @@
+docker pull nome_da_imagem                  # baixar imagem do Docker Hub
+docker build -t nome_da_imagem .            # buildar imagem a partir do Dockerfile
+docker images                                # listar imagens disponíveis
+docker run --name nome_container -p 8000:8000 nome_da_imagem   # criar e iniciar um container novo
+docker ps                                    # listar containers ativos
+docker ps -a                                 # listar todos os containers (ativos e parados)
+docker stop nome_container                   # parar container
+docker start -ai nome_container             # iniciar um container existente (já criado)
+docker rm nome_container                     # remover container parado
+docker rmi nome_da_imagem                    # remover imagem
+
+docker run -d -p 8000:8000 --name account account
+

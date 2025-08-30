@@ -197,6 +197,38 @@ class ContadorGUI(QWidget):
         top_box.addWidget(icon_label)
         layout.addLayout(top_box)
 
+        # --- Combo de arquivos para download ---
+        self.arquivos_disponiveis = [
+            "cnpjs.xlsx",
+            "R11_R12_livro_de_apuração.xlsx",
+            "R13_notas_fiscais.xlsx",
+            "R15.xlsx",
+            "R21.xlsx"
+        ]
+
+        download_layout = QHBoxLayout()
+        self.combo_arquivos = QComboBox()
+        self.combo_arquivos.addItems(self.arquivos_disponiveis)
+        btn_download = QPushButton("Baixar Arquivo")
+
+        def baixar_arquivo():
+            arquivo_selecionado = self.combo_arquivos.currentText()
+            # Salvar em pasta escolhida pelo usuário
+            pasta_destino = QFileDialog.getExistingDirectory(self, "Escolher pasta para salvar")
+            if pasta_destino:
+                # Aqui apenas simulamos a cópia; ajuste o caminho real dos arquivos
+                import shutil
+                try:
+                    shutil.copy(os.path.join(BASE_DIR, "static", arquivo_selecionado), pasta_destino)
+                    QMessageBox.information(self, "Download", f"{arquivo_selecionado} baixado com sucesso!")
+                except Exception as e:
+                    QMessageBox.critical(self, "Erro", f"Falha ao baixar o arquivo: {e}")
+
+        btn_download.clicked.connect(baixar_arquivo)
+        download_layout.addWidget(self.combo_arquivos)
+        download_layout.addWidget(btn_download)
+        layout.addLayout(download_layout)
+
         self.my_tools = {
             "processar_e_classificar_unificado": "Processar e Classificar Unificado",
             "consulta_cnpj": "Consulta CNPJ",
