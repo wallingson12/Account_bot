@@ -10,6 +10,8 @@ __pycache__/
 build/
 dist/
 file/
+venv/
+.venv
 *.pkg
 *.pyz
 
