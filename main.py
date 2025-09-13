@@ -44,6 +44,10 @@ PROCESSAR_DCOMP_IPI = False
 PROCESSAR_RECOLHIMENTOS = False
 
 
+def listar_pdfs(pasta_pdfs):
+    pasta = Path(pasta_pdfs)
+    return [f for f in os.listdir(pasta_pdfs) if f.lower().endswith('.pdf')]
+
 class Contador:
     def __init__(self, caminho_tesseract: str = None):
         self.caminho_tesseract = caminho_tesseract
@@ -195,7 +199,24 @@ class Contador:
 
     @log_de_erro
     def processar_pdfs_dctf(self, pasta_pdfs, usar_ocr=True):
-        arquivos_pdf = [f for f in os.listdir(pasta_pdfs) if f.lower().endswith('.pdf')]
+        """
+        Processa arquivos PDF de DCTF em uma pasta, aplicando OCR (se habilitado) e
+        consolidando os registros extraídos em um único DataFrame e planilha Excel.
+
+        Args:
+            pasta_pdfs (str | Path): Caminho da pasta contendo os arquivos PDF de DCTF.
+            usar_ocr (bool, optional): Define se OCR deve ser utilizado.
+                Padrão=True.
+
+        Returns:
+            pandas.DataFrame: DataFrame consolidado com os registros extraídos.
+                Retorna vazio se não houver dados.
+
+        Side Effects:
+            - Cria o arquivo `resultado_dctf.xlsx` na mesma pasta.
+            - Imprime logs de progresso no console.
+        """
+        arquivos_pdf = listar_pdfs(pasta_pdfs)
         consolidado_df = pd.DataFrame()
 
         for arquivo_pdf in arquivos_pdf:
@@ -207,19 +228,50 @@ class Contador:
                 consolidado_df = pd.concat([consolidado_df, dctf_df], ignore_index=True)
             except Exception as e:
                 print(f"❌ Erro ao processar DCTF {arquivo_pdf}: {e}")
+            finally:
+                gc.collect()  # libera memória após processar cada PDF
 
         if not consolidado_df.empty:
             nome_saida = os.path.join(pasta_pdfs, "resultado_dctf.xlsx")
             consolidado_df.to_excel(nome_saida, index=False)
             print(f"✅ Arquivo salvo em: {nome_saida}")
+            gc.collect()  # garante limpeza final de memória
             return consolidado_df
         else:
             print("Nenhum dado encontrado nos PDFs.")
+            gc.collect()  # limpeza caso não haja dados
             return pd.DataFrame()
 
     @log_de_erro
     def processar_fontes_pagadoras(self, pasta_pdfs, usar_ocr=True):
-        arquivos_pdf = [f for f in os.listdir(pasta_pdfs) if f.lower().endswith('.pdf')]
+        """
+            Processa todos os arquivos PDF de Fontes Pagadoras em uma pasta, aplicando OCR
+            e extraindo os dados estruturados (CNPJ, Nome, Data, Código, Rendimento, Imposto).
+            O resultado é consolidado em um único DataFrame e salvo em Excel.
+
+            Fluxo:
+                1. Lista todos os PDFs da pasta informada.
+                2. Converte cada PDF em imagens de página.
+                3. Aplica OCR em cada imagem para extrair o texto bruto.
+                4. Executa o parser (`find_full_patterns`) para localizar os padrões desejados.
+                5. Monta DataFrames individuais por arquivo e adiciona a coluna 'ARQUIVO_ORIGEM'.
+                6. Concatena todos os DataFrames em um consolidado único.
+                7. Salva o resultado em "Fontes_Pagadoras_Consolidado.xlsx".
+
+            Args:
+                pasta_pdfs (str): Caminho da pasta contendo os arquivos PDF.
+                usar_ocr (bool, opcional): Define se OCR deve ser utilizado.
+                    Padrão é True.
+
+            Returns:
+                pandas.DataFrame: Consolidado com os dados extraídos.
+                                  Se nenhum dado for encontrado, retorna DataFrame vazio.
+
+            Raises:
+                Exception: Erros individuais por arquivo são tratados internamente.
+                           Se todos falharem, retorna DataFrame vazio sem lançar exceção.
+        """
+        arquivos_pdf = listar_pdfs(pasta_pdfs)
         consolidado_df = pd.DataFrame()
 
         if not usar_ocr:
@@ -243,23 +295,44 @@ class Contador:
                     print(f"[FONTES] Nenhum dado encontrado no arquivo {arquivo_pdf}.")
             except Exception as e:
                 print(f"❌ Erro ao processar Fonte Pagadora {arquivo_pdf}: {e}")
+            finally:
+                gc.collect()  # libera memória após processar cada PDF
 
         if not consolidado_df.empty:
             caminho_saida = os.path.join(pasta_pdfs, "Fontes_Pagadoras_Consolidado.xlsx")
             consolidado_df.to_excel(caminho_saida, index=False)
             print(f"[FONTES] Arquivo consolidado salvo em: {caminho_saida}")
+            gc.collect()  # limpeza final após salvar o arquivo
         else:
             print("[FONTES] Nenhum dado encontrado para salvar.")
+            gc.collect()  # limpeza caso não haja dados
 
         return consolidado_df
 
     @log_de_erro
     def processar_darf_pdfs(self, pasta_pdfs, usar_ocr=True):
+        """
+        Processa arquivos PDF de DARF, aplicando OCR (se habilitado) e consolidando
+        os registros extraídos em um DataFrame e planilha Excel.
+
+        Args:
+            pasta_pdfs (str | Path): Caminho da pasta contendo os PDFs de DARF.
+            usar_ocr (bool, optional): Define se OCR deve ser utilizado.
+                Padrão=True.
+
+        Returns:
+            pandas.DataFrame: Dados extraídos dos PDFs de DARF. Retorna vazio
+                se não houver registros.
+
+        Side Effects:
+            - Cria o arquivo `DARF_Consolidado.xlsx`.
+            - Exibe logs detalhados de cada página processada.
+        """
         if not usar_ocr:
             print("[DARF] OCR desativado. Pulando processamento.")
             return pd.DataFrame()
 
-        arquivos_pdf = [f for f in os.listdir(pasta_pdfs) if f.lower().endswith('.pdf')]
+        arquivos_pdf = listar_pdfs(pasta_pdfs)
         consolidado_df = pd.DataFrame()
 
         for arquivo_pdf in arquivos_pdf:
@@ -307,34 +380,79 @@ class Contador:
 
     @log_de_erro
     def processar_pdfs_ocr_free(self, pasta_pdfs, usar_ocr=True):
+        """
+        Processa PDFs genéricos em formato tabular (OCR livre), aplicando OCR
+        e consolidando os dados em um DataFrame.
+
+        Args:
+            pasta_pdfs (str | Path): Caminho da pasta com os PDFs.
+            usar_ocr (bool, optional): Se True, aplica OCR. Padrão=True.
+
+        Returns:
+            pandas.DataFrame: DataFrame com os dados tabulares extraídos.
+                Retorna vazio se nenhum dado for identificado.
+
+        Side Effects:
+            - Cria o arquivo `OCR_Free_Consolidado.xlsx`.
+        """
         if not usar_ocr:
             print("[OCR_FREE] OCR desativado. Pulando processamento.")
             return pd.DataFrame()
 
         todas_linhas = []
-        arquivos_pdf = [f for f in os.listdir(pasta_pdfs) if f.lower().endswith('.pdf')]
+        arquivos_pdf = listar_pdfs(pasta_pdfs)
 
         for arquivo_pdf in arquivos_pdf:
             caminho_pdf = os.path.join(pasta_pdfs, arquivo_pdf)
             imagens = pdf_to_images(caminho_pdf)
             linhas = []
+
             for img in imagens:
-                texto, _ = extract_ocr_data_from_image(img, 'free_tabulate', config_map)
-                linhas.extend(parse_text_free(texto))
+                try:
+                    texto, _ = extract_ocr_data_from_image(img, 'free_tabulate', config_map)
+                    linhas.extend(parse_text_free(texto))
+                finally:
+                    del img
+                    gc.collect()  # libera memória após cada imagem
+
             todas_linhas.extend(linhas)
+            gc.collect()  # limpa memória após cada PDF
 
         if not todas_linhas:
+            gc.collect()
             return pd.DataFrame()
 
         colunas = ['Data', 'Numero', 'Descricao', 'Quantidade', 'Valor', 'Debito/Credito', 'Conta', 'Saldo Anterior']
         df = pd.DataFrame(todas_linhas, columns=colunas)
         caminho_saida = os.path.join(pasta_pdfs, "OCR_Free_Consolidado.xlsx")
         df.to_excel(caminho_saida, index=False)
+        gc.collect()  # limpeza final após salvar o arquivo
 
         return df
 
     @log_de_erro
     def processar_cfop_pdfs(self, pasta_pdfs, usar_ocr=True):
+        """
+                Processa todos os arquivos PDF de CFOP em uma pasta, aplicando OCR e extraindo
+                os registros estruturados para consolidação em planilha Excel.
+
+                Fluxo:
+                    1. Lista todos os PDFs no diretório informado.
+                    2. Converte cada página em imagem e aplica pré-processamento otimizado para CFOP.
+                    3. Executa OCR em cada página processada.
+                    4. Extrai os registros de CFOP via `extrair_cfop_valores`.
+                    5. Consolida os dados em um DataFrame único e salva como "CFOP_Consolidado.xlsx".
+
+                Args:
+                    pasta_pdfs (str): Caminho da pasta contendo os PDFs de CFOP.
+                    usar_ocr (bool, opcional): Indica se o OCR deve ser executado.
+                        - True (padrão): processa normalmente.
+                        - False: retorna DataFrame vazio sem processar.
+
+                Returns:
+                    pandas.DataFrame: DataFrame com os registros extraídos.
+                                      Caso nenhum dado seja encontrado, retorna vazio.
+                """
         if not usar_ocr:
             print("[CFOP] OCR desativado. Pulando processamento.")
             return pd.DataFrame()
@@ -351,6 +469,14 @@ class Contador:
                 registros = extrair_cfop_valores(texto, nome_arquivo, i)
                 todos.extend(registros)
 
+                # Limpeza de memória da imagem processada
+                del img, img_proc, texto, registros
+                gc.collect()
+
+            # Limpeza de memória após cada PDF
+            del imagens
+            gc.collect()
+
         if not todos:
             print("[CFOP] Nenhum dado encontrado para salvar.")
             return pd.DataFrame()
@@ -363,22 +489,74 @@ class Contador:
 
     @log_de_erro
     def processar_dcomp_pdfs(self, pasta_pdfs, usar_ocr=True):
+        """
+                Processa os arquivos PDF de DCOMP em uma pasta, aplicando OCR quando necessário
+                e consolidando os resultados em um DataFrame.
+
+                Args:
+                    pasta_pdfs (str): Caminho da pasta contendo os PDFs de DCOMP.
+                    usar_ocr (bool, opcional): Define se OCR deve ser utilizado (padrão=True).
+
+                Returns:
+                    pandas.DataFrame: Dados extraídos dos PDFs de DCOMP.
+                                      Retorna vazio em caso de falha ou ausência de registros.
+
+                Observação:
+                    A extração é realizada pela função `processar_dcomp`.
+                """
         try:
-            return processar_dcomp(pasta_pdfs, usar_ocr)
+            df = processar_dcomp(pasta_pdfs, usar_ocr)
+            gc.collect()  # coleta de memória após processamento
+            return df
         except Exception as e:
             print(f"❌ Erro ao processar DCOMP: {e}")
+            gc.collect()
             return pd.DataFrame()
 
     @log_de_erro
     def processar_dcomp_ipi_pdfs(self, pasta_pdfs, usar_ocr=False):
+        """
+                Processa arquivos PDF de DCOMP IPI em uma pasta, aplicando OCR quando solicitado
+                e retornando os dados extraídos em formato estruturado.
+
+                Args:
+                    pasta_pdfs (str): Caminho da pasta com os PDFs de DCOMP IPI.
+                    usar_ocr (bool, opcional): Indica se OCR deve ser utilizado.
+                        Padrão=False.
+
+                Returns:
+                    pandas.DataFrame: DataFrame com os registros extraídos.
+                                      Caso não haja dados ou ocorra erro, retorna vazio.
+
+                Observação:
+                    A extração é delegada à função `processor_dcomp_ipi`.
+                """
         try:
-            return processor_dcomp_ipi(pasta_pdfs, usar_ocr)
+            df = processor_dcomp_ipi(pasta_pdfs, usar_ocr)
+            gc.collect()  # coleta de memória após processamento
+            return df
         except Exception as e:
-            print(f"❌ Erro ao processar DCOMP: {e}")
+            print(f"❌ Erro ao processar DCOMP IPI: {e}")
+            gc.collect()
             return pd.DataFrame()
 
     @log_de_erro
     def processar_recolhimentos_pdfs(self, pasta_pdfs, usar_ocr=False):
+        """
+                Processa arquivos PDF de Recolhimentos, aplicando OCR quando necessário
+                e consolidando os registros em DataFrame.
+
+                Args:
+                    pasta_pdfs (str): Caminho da pasta com os PDFs de Recolhimentos.
+                    usar_ocr (bool, opcional): Define se OCR deve ser usado. Padrão=False.
+
+                Returns:
+                    pandas.DataFrame: Dados extraídos dos PDFs.
+                                      Retorna vazio se nenhum registro for encontrado ou se ocorrer erro.
+
+                Observação:
+                    A extração é feita pela função `extrair_recolhimento_pdf`.
+                """
         print(f"[RECOLHIMENTOS] Processando PDFs em: {pasta_pdfs} com OCR={usar_ocr}")
         try:
             df_recolhimentos = extrair_recolhimento_pdf(pasta_pdfs, usar_ocr=usar_ocr)
@@ -386,13 +564,28 @@ class Contador:
                 print(f"[RECOLHIMENTOS] Extração concluída. {len(df_recolhimentos)} registros encontrados.")
             else:
                 print("[RECOLHIMENTOS] Nenhum dado encontrado.")
+            gc.collect()  # coleta de memória após processamento
             return df_recolhimentos
         except Exception as e:
             print(f"❌ Erro ao processar Recolhimentos: {e}")
+            gc.collect()
             return pd.DataFrame()
 
     @log_de_erro
     def process_file_r11_r12(self, file_path):
+        """
+        Processa arquivos Excel do tipo R11/R12 (DCOMP), validando colunas e
+        gerando arquivo de saída `.txt`.
+
+        Args:
+            file_path (str | Path): Caminho do arquivo Excel a ser processado.
+
+        Returns:
+            str: Caminho do arquivo `.txt` gerado.
+
+        Side Effects:
+            - Cria arquivo `.txt` com o mesmo nome do Excel de entrada.
+        """
         df = carregar_excel(file_path)
         df = validar_colunas_valores(df)
         df, _ = formatar_dados(df)
