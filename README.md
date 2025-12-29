@@ -20,7 +20,7 @@ A classe `Contador` centraliza todas as ações automatizadas:
   Une todos os arquivos `.xls` e `.xlsx` de uma pasta em um único arquivo consolidado.
   
 - **`consulta_cnpj()`**  
-  Consulta dados cadastrais de CNPJs contidos em um arquivo Excel via API da Receita Federal.
+  Consulta dados cadastrais de CNPJs contidos em um arquivo Excel via API.
 
 ### 📄 **Processamento de PDFs Fiscais (com OCR)**
 
