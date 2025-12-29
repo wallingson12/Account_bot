@@ -1,30 +1,25 @@
 import sys
+import os
+import shutil
 from PySide6.QtWidgets import (
     QApplication, QDialog, QVBoxLayout, QLabel, QLineEdit,
     QPushButton, QHBoxLayout, QMessageBox, QWidget,
     QComboBox, QFormLayout, QFileDialog
 )
-from PySide6.QtGui import QPixmap
-from PySide6.QtCore import Qt
-
-import sys
-import os
+from PySide6.QtGui import QPixmap, QDesktopServices
+from PySide6.QtCore import Qt, QUrl
 
 if getattr(sys, 'frozen', False):
     BASE_DIR = sys._MEIPASS
-    sys.path.append(BASE_DIR)  # adiciona a raiz do executável aos imports
+    sys.path.append(BASE_DIR)
 else:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 from main import Contador
-from account_tools.api import autenticar_api  # sua função de autenticação
+from account_tools.api import autenticar_api
 from config.config import caminho_tesseract
 
-# --- Dialog de Login ---
-from PySide6.QtGui import QDesktopServices
-from PySide6.QtCore import QUrl
-# ...
-
+# --- Login Dialog ---
 class LoginDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -40,11 +35,11 @@ class LoginDialog(QDialog):
             QDialog {
                 background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                 stop:0 #e3f2fd, stop:1 #bbdefb);
-                }
+            }
             QLabel {
                font-weight: bold;
                qproperty-alignment: 'AlignCenter';
-               }
+            }
             QLineEdit {
                 padding: 6px;
                 border: 1px solid #ccc;
@@ -134,9 +129,6 @@ class ContadorGUI(QWidget):
         self.setWindowTitle("Interface Contador")
         self.setFixedSize(600, 500)
 
-        qr = self.frameGeometry()
-        cp = QApplication.primaryScreen().availableGeometry().center()
-
         self.setStyleSheet("""
             QWidget {
                 background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
@@ -144,60 +136,37 @@ class ContadorGUI(QWidget):
                 font-family: 'Segoe UI', sans-serif;
                 font-size: 14px;
             }
-
-            QLabel {
-                background-color: transparent;
-                font-weight: bold;
-            }
-
+            QLabel { font-weight: bold; background-color: transparent; }
             QComboBox, QLineEdit, QTextEdit {
-                border: 1px solid #aaa;
-                border-radius: 6px;
-                padding: 6px;
+                border: 1px solid #aaa; border-radius: 6px; padding: 6px;
             }
-
             QPushButton {
-                background-color: #0078d7;
-                color: white;
-                border-radius: 6px;
-                padding: 6px 12px;
+                background-color: #0078d7; color: white; border-radius: 6px; padding: 6px 12px;
             }
-
-            QPushButton:hover {
-                background-color: #005fa3;
-            }
-
+            QPushButton:hover { background-color: #005fa3; }
             QTextEdit {
-                background-color: #1e1e1e;
-                color: #dcdcdc;
-                border: 1px solid #444;
+                background-color: #1e1e1e; color: #dcdcdc; border: 1px solid #444;
                 font-family: Consolas, monospace;
             }
         """)
 
         layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignTop)
 
+        # Botão Sobre
         btn_sobre = QPushButton("Sobre")
-
-        # Função normal dentro do __init__, sem self
-        def abrir_sobre():
-            QDesktopServices.openUrl(QUrl("http://127.0.0.1:8000/home"))
-
-        btn_sobre.clicked.connect(abrir_sobre)
+        btn_sobre.clicked.connect(lambda: QDesktopServices.openUrl(QUrl("http://127.0.0.1:8000/home")))
         layout.addWidget(btn_sobre, alignment=Qt.AlignRight)
 
-        pix = QPixmap(r"assets\D2X.png").scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        # Logo
+        pix = QPixmap(os.path.join(BASE_DIR, "assets", "D2X.png")).scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         icon_label = QLabel()
         icon_label.setPixmap(pix)
         icon_label.setFixedSize(64, 64)
         icon_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
+        layout.addWidget(icon_label, alignment=Qt.AlignCenter)
 
-        top_box = QVBoxLayout()
-        top_box.setAlignment(Qt.AlignCenter)
-        top_box.addWidget(icon_label)
-        layout.addLayout(top_box)
-
-        # --- Combo de arquivos para download ---
+        # Combo de download
         self.arquivos_disponiveis = [
             "cnpjs.xlsx",
             "R11_R12_livro_de_apuração.xlsx",
@@ -205,30 +174,16 @@ class ContadorGUI(QWidget):
             "R15.xlsx",
             "R21.xlsx"
         ]
-
         download_layout = QHBoxLayout()
         self.combo_arquivos = QComboBox()
         self.combo_arquivos.addItems(self.arquivos_disponiveis)
         btn_download = QPushButton("Baixar Arquivo")
-
-        def baixar_arquivo():
-            arquivo_selecionado = self.combo_arquivos.currentText()
-            # Salvar em pasta escolhida pelo usuário
-            pasta_destino = QFileDialog.getExistingDirectory(self, "Escolher pasta para salvar")
-            if pasta_destino:
-                # Aqui apenas simulamos a cópia; ajuste o caminho real dos arquivos
-                import shutil
-                try:
-                    shutil.copy(os.path.join(BASE_DIR, "static", arquivo_selecionado), pasta_destino)
-                    QMessageBox.information(self, "Download", f"{arquivo_selecionado} baixado com sucesso!")
-                except Exception as e:
-                    QMessageBox.critical(self, "Erro", f"Falha ao baixar o arquivo: {e}")
-
-        btn_download.clicked.connect(baixar_arquivo)
+        btn_download.clicked.connect(self.baixar_arquivo)
         download_layout.addWidget(self.combo_arquivos)
         download_layout.addWidget(btn_download)
         layout.addLayout(download_layout)
 
+        # Funções
         self.my_tools = {
             "processar_e_classificar_unificado": "Processar e Classificar Unificado",
             "consulta_cnpj": "Consulta CNPJ",
@@ -242,7 +197,10 @@ class ContadorGUI(QWidget):
         }
 
         self.import_dcomp = {
-            "R11/R12":"Gerar arquivo R11/R12"
+            "R11_R12": "Gerar arquivo R11/R12",
+            "R13": "Gerar arquivo R13",
+            "R15": "Gerar arquivo R15",
+            "R21": "Gerar arquivo R21"
         }
 
         self.tabulates = {
@@ -261,13 +219,10 @@ class ContadorGUI(QWidget):
         self.switch_button.clicked.connect(self.switch_function_set)
         layout.addWidget(self.switch_button)
 
-        label = QLabel("Selecione a função:")
-        layout.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
-        layout.addWidget(label)
-
+        layout.addWidget(QLabel("Selecione a função:"), alignment=Qt.AlignTop | Qt.AlignHCenter)
         self.func_combo = QComboBox()
-        layout.addWidget(self.func_combo)
         self.func_combo.currentIndexChanged.connect(self.mostrar_formulario)
+        layout.addWidget(self.func_combo)
 
         self.form_layout = QFormLayout()
         layout.addLayout(self.form_layout)
@@ -278,6 +233,17 @@ class ContadorGUI(QWidget):
 
         self.setLayout(layout)
         self.update_func_combo()
+
+    # --- Funções de apoio ---
+    def baixar_arquivo(self):
+        arquivo_selecionado = self.combo_arquivos.currentText()
+        pasta_destino = QFileDialog.getExistingDirectory(self, "Escolher pasta para salvar")
+        if pasta_destino:
+            try:
+                shutil.copy(os.path.join(BASE_DIR, "static", arquivo_selecionado), pasta_destino)
+                QMessageBox.information(self, "Download", f"{arquivo_selecionado} baixado com sucesso!")
+            except Exception as e:
+                QMessageBox.critical(self, "Erro", f"Falha ao baixar o arquivo: {e}")
 
     def switch_function_set(self):
         if self.current_tool_set == "my_tools":
@@ -294,7 +260,6 @@ class ContadorGUI(QWidget):
     def update_func_combo(self):
         self.func_combo.clear()
         if self.current_tool_set == "my_tools":
-            # junta as funções do My Tools com as do Import DCOMP
             todas_funcoes = list(self.my_tools.values()) + list(self.import_dcomp.values())
             self.func_combo.addItems(todas_funcoes)
         elif self.current_tool_set == "tabulates":
@@ -306,17 +271,17 @@ class ContadorGUI(QWidget):
     def get_func_key(self, display_text):
         if self.current_tool_set == "my_tools":
             dict_combined = {**self.my_tools, **self.import_dcomp}
-            for key, val in dict_combined.items():
-                if val == display_text:
-                    return key
+            for k, v in dict_combined.items():
+                if v == display_text:
+                    return k
         elif self.current_tool_set == "tabulates":
-            for key, val in self.tabulates.items():
-                if val == display_text:
-                    return key
+            for k, v in self.tabulates.items():
+                if v == display_text:
+                    return k
         elif self.current_tool_set == "import_dcomp":
-            for key, val in self.import_dcomp.items():
-                if val == display_text:
-                    return key
+            for k, v in self.import_dcomp.items():
+                if v == display_text:
+                    return k
         return None
 
     def mostrar_formulario(self):
@@ -357,6 +322,7 @@ class ContadorGUI(QWidget):
                 self.form_layout.addRow(nome + ":", campo)
                 self.entries[nome] = campo
 
+        # --- Formulários ---
         if self.current_tool_set == "my_tools":
             if func == "processar_e_classificar_unificado":
                 criar_entry("Arquivo Excel 1", "file")
@@ -368,25 +334,20 @@ class ContadorGUI(QWidget):
                 criar_entry("Colunas do Excel 1 (separadas por vírgula)", placeholder="Ex: CNPJ,Nome,Data")
                 criar_entry("Colunas do Excel 2 (separadas por vírgula)", placeholder="Ex: CNPJ,Nome,Data")
                 criar_entry("Diretório de saída", "folder")
-
             elif func == "consulta_cnpj":
                 criar_entry("Taxa de consulta (por minuto)", placeholder="3")
                 criar_entry("Arquivo Excel de entrada", "file")
                 criar_entry("Arquivo Excel de saída", placeholder="resultado_cnpjs.xlsx")
-
             elif func == "dividir_excel_por_item_de_coluna":
                 criar_entry("Arquivo Excel", "file")
                 criar_entry("Coluna de divisão")
                 criar_entry("Diretório de saída", "folder")
-
             elif func == "limpar_pastas_de_arquivos_indesejados":
                 criar_entry("Pasta raiz", "folder")
                 criar_entry("Formato para manter (ex: .xlsx)")
-
             elif func == "mover_arquivos_xml_metade":
                 criar_entry("Diretório origem", "folder")
                 criar_entry("Diretório destino", "folder")
-
             elif func == "organizar_XML_por_data":
                 criar_entry("Diretório origem", "folder")
                 criar_entry("Diretório destino", "folder")
@@ -394,33 +355,29 @@ class ContadorGUI(QWidget):
                 cb.addItems(["ano", "mes/ano"])
                 self.form_layout.addRow("Organizar por:", cb)
                 self.entries["Organizar por"] = cb
-
             elif func == "mover_arquivos_por_extensão":
                 criar_entry("Diretório raiz", "folder")
                 criar_entry("Pasta output", "folder")
                 criar_entry("Extensão desejada (ex: .xml)")
-
             elif func == "unificar_Excel_da_pasta":
                 criar_entry("Pasta", "folder")
-
             elif func in self.import_dcomp:
-                # ex: R11/R12
-                criar_entry("Pasta de entrada", "folder")
-                criar_entry("Arquivo de saída")
+                criar_entry("Arquivo Excel de entrada", "file")
+                criar_entry("Diretório de saída", "folder")
 
         elif self.current_tool_set == "import_dcomp":
-            if func == "R11/R12":
-                criar_entry("Pasta de entrada", "folder")
-                criar_entry("Arquivo de saída")
+            if func in self.import_dcomp:
+                criar_entry("Arquivo Excel de entrada", "file")
+                criar_entry("Diretório de saída", "folder")
 
         else:  # tabulates
-            # Todas as funções de tabulates têm assinatura (pasta_pdfs, usar_ocr=True/False)
             criar_entry("Pasta com PDFs", "folder")
             cb_ocr = QComboBox()
             cb_ocr.addItems(["Sim", "Não"])
             self.form_layout.addRow("Usar OCR?", cb_ocr)
             self.entries["Usar OCR"] = cb_ocr
 
+    # --- Seleção de arquivos/pastas ---
     def selecionar_arquivo(self, campo):
         arquivo, _ = QFileDialog.getOpenFileName(self, "Selecionar arquivo")
         if arquivo:
@@ -431,6 +388,7 @@ class ContadorGUI(QWidget):
         if pasta:
             campo.setText(pasta)
 
+    # --- Execução ---
     def execute_my_tools(self):
         func_display = self.func_combo.currentText()
         func = self.get_func_key(func_display)
@@ -453,111 +411,101 @@ class ContadorGUI(QWidget):
                     resultado = self.contador.processar_e_classificar_unificado(
                         path1, aba1, pular1, path2, aba2, pular2, cols1, cols2, dir_saida
                     )
-
                 elif func == "consulta_cnpj":
                     taxa = self.entries["Taxa de consulta (por minuto)"].text()
                     entrada = self.entries["Arquivo Excel de entrada"].text()
                     saida = self.entries["Arquivo Excel de saída"].text()
-
                     resultado = self.contador.consulta_cnpj(
                         taxa_consulta=int(taxa) if taxa else 3,
                         arquivo_entrada=entrada,
                         arquivo_saida=saida
                     )
-
                 elif func == "dividir_excel_por_item_de_coluna":
                     resultado = self.contador.dividir_excel(
                         arquivo_excel=self.entries["Arquivo Excel"].text(),
                         coluna_divisao=self.entries["Coluna de divisão"].text(),
                         diretorio_output=self.entries["Diretório de saída"].text()
                     )
-
                 elif func == "limpar_pastas_de_arquivos_indesejados":
                     resultado = self.contador.limpar_arquivos_por_formato(
                         pasta_raiz=self.entries["Pasta raiz"].text(),
                         formato_manter=self.entries["Formato para manter (ex: .xlsx)"].text()
                     )
-
                 elif func == "mover_arquivos_xml_metade":
-                    resultado = self.contador.mover_arquivos_esocial(
-                        self.entries["Diretório origem"].text(),
-                        self.entries["Diretório destino"].text()
+                    resultado = self.contador.mover_arquivos_metade(
+                        diretorio_origem=self.entries["Diretório origem"].text(),
+                        diretorio_destino=self.entries["Diretório destino"].text()
                     )
-
                 elif func == "organizar_XML_por_data":
-                    dir_origem = self.entries["Diretório origem"].text()
-                    organizar_por = self.entries["Organizar por"].currentText()
-                    resultado = self.contador.organizar_xml_por_data(dir_origem, organizar_por)
-
+                    resultado = self.contador.organizar_XML_por_data(
+                        origem=self.entries["Diretório origem"].text(),
+                        destino=self.entries["Diretório destino"].text(),
+                        tipo=self.entries["Organizar por"].currentText()
+                    )
                 elif func == "mover_arquivos_por_extensão":
                     resultado = self.contador.mover_arquivos_por_extensao(
-                        self.entries["Diretório raiz"].text(),
-                        self.entries["Pasta output"].text(),
-                        self.entries["Extensão desejada (ex: .xml)"].text()
+                        diretorio_raiz=self.entries["Diretório raiz"].text(),
+                        pasta_output=self.entries["Pasta output"].text(),
+                        extensao=self.entries["Extensão desejada (ex: .xml)"].text()
                     )
-
                 elif func == "unificar_Excel_da_pasta":
                     resultado = self.contador.unificar_excel_da_pasta(
-                        self.entries["Pasta"].text()
+                        pasta=self.entries["Pasta"].text()
                     )
-                else:
-                    resultado = "Função não implementada."
+                elif func in self.import_dcomp:
+                    arquivo_entrada = self.entries["Arquivo Excel de entrada"].text()
+                    diretorio_saida = self.entries["Diretório de saída"].text()
+                    if func == "R11_R12":
+                        resultado = self.contador.processar_r11_r12(arquivo_entrada, diretorio_saida)
+                    elif func == "R13":
+                        resultado = self.contador.processar_r13(arquivo_entrada, diretorio_saida)
+                    elif func == "R15":
+                        resultado = self.contador.processar_r15(arquivo_entrada, diretorio_saida)
+                    elif func == "R21":
+                        resultado = self.contador.processar_r21(arquivo_entrada, diretorio_saida)
 
             elif self.current_tool_set == "import_dcomp":
-                if func == "R11/R12":
-                    entrada = self.entries["Pasta de entrada"].text()
-                    saida = self.entries["Arquivo de saída"].text()
-                    resultado = self.contador.gerar_r11_r12(entrada, saida)
-                else:
-                    resultado = "Função não implementada."
+                arquivo_entrada = self.entries["Arquivo Excel de entrada"].text()
+                diretorio_saida = self.entries["Diretório de saída"].text()
+                if func == "R11_R12":
+                    resultado = self.contador.processar_r11_r12(arquivo_entrada, diretorio_saida)
+                elif func == "R13":
+                    resultado = self.contador.processar_r13(arquivo_entrada, diretorio_saida)
+                elif func == "R15":
+                    resultado = self.contador.processar_r15(arquivo_entrada, diretorio_saida)
+                elif func == "R21":
+                    resultado = self.contador.processar_r21(arquivo_entrada, diretorio_saida)
 
-            elif self.current_tool_set == "tabulates":
-                pasta = self.entries["Pasta com PDFs"].text()
+            else:  # tabulates
+                pasta_pdf = self.entries["Pasta com PDFs"].text()
                 usar_ocr = self.entries["Usar OCR"].currentText() == "Sim"
+                resultado = self.contador.tabular_pdfs(func, pasta_pdf, usar_ocr)
 
-                if hasattr(self.contador, func):
-                    funcao = getattr(self.contador, func)
-                    resultado = funcao(pasta, usar_ocr)
-                else:
-                    resultado = "Função não implementada."
-
-            if resultado is None:
-                resultado = "(sem mensagem de retorno)"
-
-            QMessageBox.information(self, "Resultado", str(resultado))
+            QMessageBox.information(self, "Resultado", f"{resultado}")
 
         except Exception as e:
             QMessageBox.critical(self, "Erro", str(e))
 
-
-# --- Função de autenticação ---
-def autenticar_usuario_gui():
-    for _ in range(3):
-        login_dialog = LoginDialog()
-        result = login_dialog.exec()
-
-        if result != QDialog.Accepted:
-            return None
-
-        try:
-            resposta = autenticar_api(login_dialog.usuario, login_dialog.senha)
-            return resposta
-        except Exception as e:
-            QMessageBox.warning(None, "Erro", f"Falha na autenticação: {e}")
-
-    return None
-
-
+# --- Execução ---
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    usuario_logado = autenticar_usuario_gui()
-    if usuario_logado is None:
-        QMessageBox.warning(None, "Login", "Falha na autenticação. Encerrando.")
-        sys.exit()
+    login = LoginDialog()
+    if login.exec() == QDialog.Accepted:
+        usuario = login.usuario
+        senha = login.senha
 
-    contador = Contador(caminho_tesseract)
-    janela = ContadorGUI(contador)
-    janela.show()
+        try:
+            token = autenticar_api(usuario, senha)
+            if not token:
+                QMessageBox.critical(None, "Erro", "Falha na autenticação")
+                sys.exit()
 
-    sys.exit(app.exec())
+            contador = Contador()
+            window = ContadorGUI(contador)
+            window.show()
+            sys.exit(app.exec())
+
+        except Exception as e:
+            QMessageBox.critical(None, "Erro", str(e))
+            sys.exit()
