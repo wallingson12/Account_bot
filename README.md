@@ -25,10 +25,10 @@ A classe `Contador` centraliza todas as ações automatizadas:
 ### 📄 **Processamento de PDFs Fiscais (com OCR)**
 
 - **`processar_pdfs_dctf()`**  
-  Extrai dados de Declarações de Débitos e Créditos Tributários Federais (DCTF) usando OCR.
+  Extrai dados de Declarações de Débitos e Créditos Tributários Federais (DCTF).
   
 - **`processar_darf_pdfs()`**  
-  Processa Documentos de Arrecadação da Receita Federal (DARF) com reconhecimento de texto.
+  Processa Documentos de Arrecadação da Receita Federal (DARF).
   
 - **`processar_fontes_pagadoras()`**  
   Extrai informações de fontes pagadoras de rendimentos.
@@ -68,24 +68,23 @@ A classe `Contador` centraliza todas as ações automatizadas:
 ### 🧾 **Processamento de IPI**
 
 - **`processar_r11_r12()`**  
-  Gera arquivos para Registro R11/R12 do IPI.
+  Gera arquivos txt para importação do Registro R11/R12 na dcomp de ressarcimento de IPI.
   
 - **`processar_r13()`**  
-  Processa Registro R13 do IPI.
+  Gera arquivos txt para importação do Registro R13 na dcomp de ressarcimento de IPI.
   
 - **`processar_r15()`**  
-  Processa Registro R15 do IPI.
+  Gera arquivos txt para importação do Registro R15 na dcomp de ressarcimento de IPI.
   
 - **`processar_r21()`**  
-  Processa Registro R21 do IPI.
+  Gera arquivos txt para importação do Registro R21 na dcomp de ressarcimento de IPI.
 
 ---
 
-## 🛠️ **Tecnologias Utilizadas**
-
-### **Backend & API**
-- **Django** + **Django REST Framework** + **SimpleJWT**
-- Autenticação via tokens JWT (access/refresh)
+### 🔐 **API REST com Autenticação JWT**
+- Autenticação segura com JSON Web Tokens (JWT)
+- Endpoints protegidos com tokens de acesso e refresh
+- Integração com Django REST Framework
 
 ### **Processamento de Dados**
 - **Pandas** - Manipulação de dados e Excel
@@ -115,3 +114,34 @@ A aplicação expõe uma API REST para autenticação e integração programáti
 | POST | `/api/token/refresh/` | Atualiza o token de acesso usando o refresh token |
 
 ---
+
+---
+
+## ⚙️ **Configuração e Uso**
+
+### **1. Instalação**
+
+```bash
+# Clone o repositório
+git clone [seu-repositorio]
+
+# Crie e ative o ambiente virtual
+python -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# ou
+.venv\Scripts\activate     # Windows
+
+# Instale as dependências
+pip install -r requirements.txt
+
+# Configure o caminho do Tesseract OCR
+# Edite config/config.py com o caminho correto
+
+2. Configuração do Tesseract
+# Em config/config.py
+caminho_tesseract = "/usr/bin/tesseract"  # Linux
+# ou
+caminho_tesseract = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"  # Windows
+
+📄 Licença
+Este projeto está licenciado sob a licença MIT.
