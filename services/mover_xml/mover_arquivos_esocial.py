@@ -3,7 +3,7 @@ import shutil
 import xml.etree.ElementTree as ET
 
 def mover_arquivos_xml_metade(pasta_base, pasta_destino, dividir=False):
-    """Mover arquivos XML de uma pasta para outra, com opção de mover só metade deles"""
+
     if not os.path.exists(pasta_destino):
         os.makedirs(pasta_destino)
 

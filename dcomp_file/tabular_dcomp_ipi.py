@@ -12,7 +12,7 @@ def extrair_dados_apuracao(pdf_path, tipo):
             text = page.extract_text()
             if tipo == 'entrada':
                 # competencia_entrada = re.findall(r'([A-Za-z]+/\d{4})', text)
-                cfop_apura = re.findall(r'CFOP:\s*(\d\.\d{3})', text)
+                cfop_apura = re.findall(r'cfop:\s*(\d\.\d{3})', text)
                 base_calculo = re.findall(r'Base de Cálculo\s*([\d.,]+(?:\s*-\s*[\d.,]+)?)', text)
                 ipi_creditado = re.findall(r'IPI Creditado\s*([\d.,]+(?:\s*-\s*[\d.,]+)?)', text)
                 isento = re.findall(r'Isentas ou Não Tributadas\s*([\d.,]+(?:\s*-\s*[\d.,]+)?)', text)
@@ -20,7 +20,7 @@ def extrair_dados_apuracao(pdf_path, tipo):
                 for cf, base, ipi_cred, isent, outr in zip(cfop_apura, base_calculo, ipi_creditado, isento, outros):
                     dados.append({
                         # 'Competência': competencia_entrada,
-                        'CFOP Código': cf,
+                        'cfop Código': cf,
                         'Base de Cálculo': base,
                         'IPI Creditado': ipi_cred,
                         'Isentas ou Não Tributadas': isent,
@@ -28,7 +28,7 @@ def extrair_dados_apuracao(pdf_path, tipo):
                     })
             elif tipo == 'saida':
                 # competencia_saida = competencia_saida
-                cfop_apura = re.findall(r'CFOP:\s*(\d\.\d{3})', text)
+                cfop_apura = re.findall(r'cfop:\s*(\d\.\d{3})', text)
                 base_calculo = re.findall(r'Base de Cálculo\s*([\d.,]+(?:\s*-\s*[\d.,]+)?)', text)
                 ipi_debitado = re.findall(r'IPI Debitado\s*([\d.,]+(?:\s*-\s*[\d.,]+)?)', text)
                 isento = re.findall(r'Isentas ou Não Tributadas\s*([\d.,]+(?:\s*-\s*[\d.,]+)?)', text)
@@ -36,7 +36,7 @@ def extrair_dados_apuracao(pdf_path, tipo):
                 for cf, base, ipi_deb, isent, outr in zip(cfop_apura, base_calculo, ipi_debitado, isento, outros):
                     dados.append({
                         # 'Competência': competencia,
-                        'CFOP Código': cf,
+                        'cfop Código': cf,
                         'Base de Cálculo': base,
                         'IPI Debitado': ipi_deb,
                         'Isentas ou Não Tributadas': isent,
@@ -58,7 +58,7 @@ def extrair_dados_notas(pdf_path):
             notas_fiscais = re.findall(r'N° da Nota Fiscal:\s*(\d+)', text)
             data_emissao = re.findall(r'Data de Emissão:\s*(\d{1,2})/(\s*\d{1,2})/(\d{4})', text)
             data_entrada = re.findall(r'Data de Entrada:\s*(.*)', text)
-            cfop = re.findall(r'CFOP:\s*(\d\.\d{3})\s*-\s*(.+)', text)
+            cfop = re.findall(r'cfop:\s*(\d\.\d{3})\s*-\s*(.+)', text)
             total = re.findall(r'Valor Total\s*([\d.,]+(?:\s*-\s*[\d.,]+)?)', text)
             valores_ipi = re.findall(r'Valor do IPI Destacado\s*([\d.,]+(?:\s*-\s*[\d.,]+)?)', text)
             valores_ipi_creditado = re.findall(r'Valor do IPI Creditado no Livro RAIPI\s*([\d.,]+(?:\s*-\s*[\d.,]+)?)',
@@ -78,8 +78,8 @@ def extrair_dados_notas(pdf_path):
                     'N° da Nota Fiscal': notas_fiscais[i] if i < len(notas_fiscais) else None,
                     'Data de Emissão': data_emissao[i] if i < len(data_emissao) else None,
                     'Data de Entrada': data_entrada[i] if i < len(data_entrada) else None,
-                    'CFOP Código': cfop[i][0] if i < len(cfop) else None,
-                    'CFOP Texto': cfop[i][1] if i < len(cfop) else None,
+                    'cfop Código': cfop[i][0] if i < len(cfop) else None,
+                    'cfop Texto': cfop[i][1] if i < len(cfop) else None,
                     'Total': total[i] if i < len(total) else None,
                     'Valor do IPI Destacado': valores_ipi[i] if i < len(valores_ipi) else None,
                     'Valor do IPI Creditado no Livro RAIPI': valores_ipi_creditado[i] if i < len(

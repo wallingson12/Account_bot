@@ -73,7 +73,7 @@ def parse_itens_nfe(root):
             'nItem': det.get('nItem'),
             'cProd': prod.findtext('{*}cProd'),
             'xProd': prod.findtext('{*}xProd'),
-            'CFOP': prod.findtext('{*}CFOP'),
+            'cfop': prod.findtext('{*}cfop'),
             'uCom': prod.findtext('{*}uCom'),
             'qCom': prod.findtext('{*}qCom'),
             'vUnCom': prod.findtext('{*}vUnCom'),

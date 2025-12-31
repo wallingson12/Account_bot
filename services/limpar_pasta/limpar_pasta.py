@@ -3,12 +3,7 @@ import logging
 
 
 def limpar_arquivos_por_formato(pasta_raiz, formato_manter):
-    """
-    Remove arquivos dentro de pasta_raiz que não possuem a extensão formato_manter.
 
-    :param pasta_raiz: caminho da pasta para limpeza
-    :param formato_manter: extensão dos arquivos que devem ser mantidos (ex: 'pdf', '.txt')
-    """
     if not os.path.isdir(pasta_raiz):
         logging.error(f"Pasta inválida: {pasta_raiz}")
         return

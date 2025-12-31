@@ -3,8 +3,6 @@ import shutil
 
 
 def mover_arquivos_por_extensao(diretorio_raiz, pasta_output, extensao_desejada):
-    """Move arquivos com uma determinada extensão de um diretório (e seus subdiretórios)
-    para uma pasta de saída,"""
 
     # Normaliza extensão
     if not extensao_desejada.startswith("."):

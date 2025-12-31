@@ -185,8 +185,8 @@ class ContadorGUI(QWidget):
 
         # Funções
         self.my_tools = {
-            "processar_e_classificar_unificado": "Processar e Classificar Unificado",
-            "consulta_cnpj": "Consulta CNPJ",
+            "comparar_excel": "Conciliar planilhas",
+            "consultar_cnpj": "Consulta CNPJ",
             "dividir_excel_por_item_de_coluna": "Dividir Excel por Item de Coluna",
             "dividir_pdf": "Dividir pdf por páginas",
             "limpar_pastas_de_arquivos_indesejados": "Limpar Pastas de Arquivos Indesejados",
@@ -208,7 +208,7 @@ class ContadorGUI(QWidget):
             "processar_fontes_pagadoras": "Tabular Fontes Pagadoras",
             "processar_darf_pdfs": "Tabular DARF",
             "processar_pdfs_ocr_free": "Tabular Free",
-            "processar_cfop_pdfs": "Tabular CFOP",
+            "processar_cfop_pdfs": "Tabular cfop",
             "processar_dcomp_pdfs": "Tabular DCOMP",
             "processar_recolhimentos_pdfs": "Tabular Extrato de Recolhimentos"
         }
@@ -324,7 +324,7 @@ class ContadorGUI(QWidget):
 
         # --- Formulários ---
         if self.current_tool_set == "my_tools":
-            if func == "processar_e_classificar_unificado":
+            if func == "conciliar planilhas":
                 criar_entry("Arquivo Excel 1", "file")
                 criar_entry("Nome da aba 1")
                 criar_entry("Linhas a pular 1", placeholder="Número inteiro, ex: 0")
@@ -334,7 +334,7 @@ class ContadorGUI(QWidget):
                 criar_entry("Colunas do Excel 1 (separadas por vírgula)", placeholder="Ex: CNPJ,Nome,Data")
                 criar_entry("Colunas do Excel 2 (separadas por vírgula)", placeholder="Ex: CNPJ,Nome,Data")
                 criar_entry("Diretório de saída", "folder")
-            elif func == "consulta_cnpj":
+            elif func == "consultar_cnpj":
                 criar_entry("Taxa de consulta (por minuto)", placeholder="3")
                 criar_entry("Arquivo Excel de entrada", "file")
                 criar_entry("Arquivo Excel de saída", placeholder="resultado_cnpjs.xlsx")
@@ -397,7 +397,7 @@ class ContadorGUI(QWidget):
             resultado = None
 
             if self.current_tool_set == "my_tools":
-                if func == "processar_e_classificar_unificado":
+                if func == "comparar_excel":
                     path1 = self.entries["Arquivo Excel 1"].text()
                     aba1 = self.entries["Nome da aba 1"].text()
                     pular1 = int(self.entries["Linhas a pular 1"].text())
@@ -408,14 +408,14 @@ class ContadorGUI(QWidget):
                     cols2 = [c.strip() for c in self.entries["Colunas do Excel 2 (separadas por vírgula)"].text().split(",")]
                     dir_saida = self.entries["Diretório de saída"].text()
 
-                    resultado = self.contador.processar_e_classificar_unificado(
+                    resultado = self.contador.comparar_excel(
                         path1, aba1, pular1, path2, aba2, pular2, cols1, cols2, dir_saida
                     )
-                elif func == "consulta_cnpj":
+                elif func == "consultar_cnpj":
                     taxa = self.entries["Taxa de consulta (por minuto)"].text()
                     entrada = self.entries["Arquivo Excel de entrada"].text()
                     saida = self.entries["Arquivo Excel de saída"].text()
-                    resultado = self.contador.consulta_cnpj(
+                    resultado = self.contador.consultar_cnpj(
                         taxa_consulta=int(taxa) if taxa else 3,
                         arquivo_entrada=entrada,
                         arquivo_saida=saida
@@ -456,25 +456,25 @@ class ContadorGUI(QWidget):
                     arquivo_entrada = self.entries["Arquivo Excel de entrada"].text()
                     diretorio_saida = self.entries["Diretório de saída"].text()
                     if func == "R11_R12":
-                        resultado = self.contador.processar_r11_r12(arquivo_entrada, diretorio_saida)
+                        resultado = self.contador.r11_r12(arquivo_entrada, diretorio_saida)
                     elif func == "R13":
-                        resultado = self.contador.processar_r13(arquivo_entrada, diretorio_saida)
+                        resultado = self.contador.r13(arquivo_entrada, diretorio_saida)
                     elif func == "R15":
-                        resultado = self.contador.processar_r15(arquivo_entrada, diretorio_saida)
+                        resultado = self.contador.r15(arquivo_entrada, diretorio_saida)
                     elif func == "R21":
-                        resultado = self.contador.processar_r21(arquivo_entrada, diretorio_saida)
+                        resultado = self.contador.r21(arquivo_entrada, diretorio_saida)
 
             elif self.current_tool_set == "import_dcomp":
                 arquivo_entrada = self.entries["Arquivo Excel de entrada"].text()
                 diretorio_saida = self.entries["Diretório de saída"].text()
                 if func == "R11_R12":
-                    resultado = self.contador.processar_r11_r12(arquivo_entrada, diretorio_saida)
+                    resultado = self.contador.r11_r12(arquivo_entrada, diretorio_saida)
                 elif func == "R13":
-                    resultado = self.contador.processar_r13(arquivo_entrada, diretorio_saida)
+                    resultado = self.contador.r13(arquivo_entrada, diretorio_saida)
                 elif func == "R15":
-                    resultado = self.contador.processar_r15(arquivo_entrada, diretorio_saida)
+                    resultado = self.contador.r15(arquivo_entrada, diretorio_saida)
                 elif func == "R21":
-                    resultado = self.contador.processar_r21(arquivo_entrada, diretorio_saida)
+                    resultado = self.contador.r21(arquivo_entrada, diretorio_saida)
 
             else:  # tabulates
                 pasta_pdf = self.entries["Pasta com PDFs"].text()

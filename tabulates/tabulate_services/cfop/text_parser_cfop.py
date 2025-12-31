@@ -19,7 +19,7 @@ def extrair_cfop_valores(texto, nome_arquivo, pagina):
             registros.append({
                 'Arquivo': nome_arquivo,
                 'Página': pagina,
-                'CFOP': cfop,
+                'cfop': cfop,
                 'VL.C': vlc,
                 'BASE': base,
                 'IMP': imp,

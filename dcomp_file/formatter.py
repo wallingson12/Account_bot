@@ -17,7 +17,7 @@ def format_field(value, start, end, field_type):
 
     # Para campos numéricos, códigos ou datas
     # Preenche com zeros à esquerda até o tamanho definido
-    elif field_type in ['CNPJ', 'XN', 'DATA', 'CFOP', 'MM', 'AAAA', 'DECENDIO1', 'DECENDIO2']:
+    elif field_type in ['CNPJ', 'XN', 'DATA', 'cfop', 'MM', 'AAAA', 'DECENDIO1', 'DECENDIO2']:
         return value.zfill(length)[:length]
     # Para valores monetários ('R+')
     # Remove pontos e vírgulas e preenche com zeros à esquerda

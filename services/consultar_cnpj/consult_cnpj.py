@@ -43,27 +43,39 @@ def consulta_cnpj(
     print_verde(f"Hora prevista de fim: {hora_prevista.strftime('%H:%M')}")
 
     resultados = []
-    consulta_count = 0
+    contador_consultas = 0
 
     for cnpj in cnpjs:
         url = f"https://publica.cnpj.ws/cnpj/{cnpj}"
+
         try:
-            resp = requests.get(url)
+            resp = requests.get(url, timeout=30)
             resp.raise_for_status()
-            data = resp.json()
+
+            try:
+                data = resp.json()
+            except ValueError:
+                logging.error(f"[ERRO] Resposta não é JSON para CNPJ {cnpj}")
+                continue
+
+            if not isinstance(data, dict):
+                logging.error(f"[ERRO] Resposta inválida ou nula para CNPJ {cnpj}")
+                continue
+
         except Exception as e:
             logging.error(f"[ERRO] Falha ao consultar CNPJ {cnpj}: {e}")
             continue
 
-        est = data.get("estabelecimento", {})
-        optante = data.get("simples", {}).get("simples", "Não")
+        estabelecimento = data.get("estabelecimento") or {}
+        simples = data.get("simples") or {}
+        optante_simples = simples.get("simples", "Não")
 
         inscricao_estadual = "Não informado"
-        inscricoes = est.get("inscricoes_estaduais", [])
-        estado = est.get("estado", {}).get("nome", "")
+        inscricoes = estabelecimento.get("inscricoes_estaduais") or []
+        estado = (estabelecimento.get("estado") or {}).get("nome", "")
 
         for inscricao in inscricoes:
-            if inscricao.get("estado", {}).get("nome") == estado:
+            if (inscricao.get("estado") or {}).get("nome") == estado:
                 inscricao_estadual = inscricao.get(
                     "inscricao_estadual", "Não informado"
                 )
@@ -73,37 +85,42 @@ def consulta_cnpj(
             {
                 "CNPJ": cnpj,
                 "Razão Social": data.get("razao_social", ""),
-                "Natureza jurídica descrição": data.get("natureza_juridica", {}).get(
+                "Natureza jurídica descrição": (data.get("natureza_juridica") or {}).get(
                     "descricao", ""
                 ),
-                "CEP": est.get("cep", ""),
-                "Tipo_logradouro": est.get("tipo_logradouro", ""),
-                "logradouro": est.get("logradouro", ""),
-                "Bairro": est.get("bairro", ""),
-                "numero": est.get("numero", ""),
-                "Cidade": est.get("cidade", {}).get("nome", ""),
-                "IBGE ID": est.get("cidade", {}).get("ibge_id", ""),
+                "CEP": estabelecimento.get("cep", ""),
+                "Tipo_logradouro": estabelecimento.get("tipo_logradouro", ""),
+                "logradouro": estabelecimento.get("logradouro", ""),
+                "Bairro": estabelecimento.get("bairro", ""),
+                "numero": estabelecimento.get("numero", ""),
+                "Cidade": (estabelecimento.get("cidade") or {}).get("nome", ""),
+                "IBGE ID": (estabelecimento.get("cidade") or {}).get("ibge_id", ""),
                 "Estado": estado,
-                "Optante Simples Nacional": optante,
-                "Tipo": est.get("tipo", ""),
-                "Atividade principal": est.get("atividade_principal", {}).get(
+                "Optante Simples Nacional": optante_simples,
+                "Tipo": estabelecimento.get("tipo", ""),
+                "Atividade principal": (estabelecimento.get("atividade_principal") or {}).get(
                     "subclasse", ""
                 ),
-                "Atividade principal descricao": est.get("atividade_principal", {}).get(
+                "Atividade principal descricao": (estabelecimento.get("atividade_principal") or {}).get(
                     "descricao", ""
                 ),
                 "Inscrição estadual": inscricao_estadual,
             }
         )
 
-        consulta_count += 1
-        if consulta_count % taxa_consulta == 0:
+        contador_consultas += 1
+        if contador_consultas % taxa_consulta == 0:
             print_verde(
                 f"Aguardando 60 segundos para respeitar taxa de consulta ({taxa_consulta} por minuto)..."
             )
             time.sleep(60)
 
     df = pd.DataFrame(resultados)
+
+    if df.empty:
+        logging.error("[ERRO] Nenhum resultado válido para salvar.")
+        return
+
     try:
         df.to_excel(arquivo_saida, index=False)
         print_verde(f"Processamento concluído! Resultados salvos em {arquivo_saida}")

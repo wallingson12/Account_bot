@@ -25,3 +25,6 @@ def save_to_excel(df, excel_path, sheet_name='Dados'):
     else:
         with pd.ExcelWriter(excel_path, engine='openpyxl') as writer:
             df.to_excel(writer, sheet_name=sheet_name, index=False)
+
+def listar_pdfs(pasta):
+    return [f for f in os.listdir(pasta) if f.lower().endswith(".pdf")]
