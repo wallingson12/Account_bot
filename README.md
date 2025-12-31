@@ -10,7 +10,7 @@ A classe `Contador` centraliza todas as ações automatizadas:
 
 ### 📊 **Manipulação de Planilhas Excel**
 
-- **`processar_e_classificar_unificado()`**  
+- **`comparar_excel()`**  
   Realiza conciliação e classificação entre duas planilhas com base em colunas chave.
   
 - **`dividir_excel()`**  
@@ -24,28 +24,28 @@ A classe `Contador` centraliza todas as ações automatizadas:
 
 ### 📄 **Processamento de PDFs Fiscais (com OCR)**
 
-- **`processar_pdfs_dctf()`**  
+- **`dctf()`**  
   Extrai dados de Declarações de Débitos e Créditos Tributários Federais (DCTF).
   
-- **`processar_darf_pdfs()`**  
+- **`darf()`**  
   Processa Documentos de Arrecadação da Receita Federal (DARF).
   
-- **`processar_fontes_pagadoras()`**  
+- **`fontes_pagadoras()`**  
   Extrai informações de fontes pagadoras de rendimentos.
   
-- **`processar_cfop_pdfs()`**  
+- **`cfop()`**  
   Processa documentos com Código Fiscal de Operações e Prestações (CFOP).
   
 - **`processar_dcomp_pdfs()`**  
   Extrai dados de Declaração de Compensação (DCOMP).
   
-- **`processar_dcomp_ipi_pdfs()`**  
+- **`dcomp_ipi()`**  
   Processa DCOMP específicos para IPI.
   
-- **`processar_recolhimentos_pdfs()`**  
+- **`recolhimentos()`**  
   Extrai informações de documentos de recolhimento.
   
-- **`processar_pdfs_ocr_free()`**  
+- **`ocr_free()`**  
   OCR livre para processamento genérico de documentos PDF.
 
 ### 📁 **Organização de Arquivos**
