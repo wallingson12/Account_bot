@@ -1,6 +1,7 @@
 # 🧠 Account Bot
 
-Este projeto busca automatizar tarefas rotineiras utilizando Python e uma interface web baseada em Django com autenticação via JWT. A aplicação é voltada para agilizar processos como processamento de PDFs, conciliação de planilhas, consulta de CNPJs, OCR de documentos e muito mais.
+Este projeto busca automatizar tarefas rotineiras utilizando Python e uma interface web baseada em Django com autenticação via JWT. 
+A aplicação é voltada para agilizar processos como processamento de PDFs, conciliação de planilhas, consulta de CNPJs, OCR de documentos e muito mais.
 
 ---
 
