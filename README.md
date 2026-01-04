@@ -1,6 +1,7 @@
 # 🧠 Account Bot
 
-Automatize tarefas contábeis com o poder do Python. Este projeto une uma interface web em Django com autenticação via JWT a um conjunto robusto de ferramentas que agilizam rotinas contábeis como processamento de PDFs fiscais, conciliação de planilhas, consulta de CNPJs, OCR de documentos e muito mais.
+Este projeto busca automatizar tarefas rotineiras utilizando Python e uma interface web baseada em Django com autenticação via JWT. 
+A aplicação é voltada para agilizar processos como processamento de PDFs, conciliação de planilhas, consulta de CNPJs, OCR de documentos e muito mais.
 
 ---
 
@@ -10,7 +11,7 @@ A classe `Contador` centraliza todas as ações automatizadas:
 
 ### 📊 **Manipulação de Planilhas Excel**
 
-- **`processar_e_classificar_unificado()`**  
+- **`comparar_excel()`**  
   Realiza conciliação e classificação entre duas planilhas com base em colunas chave.
   
 - **`dividir_excel()`**  
@@ -24,28 +25,28 @@ A classe `Contador` centraliza todas as ações automatizadas:
 
 ### 📄 **Processamento de PDFs Fiscais (com OCR)**
 
-- **`processar_pdfs_dctf()`**  
+- **`dctf()`**  
   Extrai dados de Declarações de Débitos e Créditos Tributários Federais (DCTF).
   
-- **`processar_darf_pdfs()`**  
+- **`darf()`**  
   Processa Documentos de Arrecadação da Receita Federal (DARF).
   
-- **`processar_fontes_pagadoras()`**  
+- **`fontes_pagadoras()`**  
   Extrai informações de fontes pagadoras de rendimentos.
   
-- **`processar_cfop_pdfs()`**  
+- **`cfop()`**  
   Processa documentos com Código Fiscal de Operações e Prestações (CFOP).
   
 - **`processar_dcomp_pdfs()`**  
   Extrai dados de Declaração de Compensação (DCOMP).
   
-- **`processar_dcomp_ipi_pdfs()`**  
+- **`dcomp_ipi()`**  
   Processa DCOMP específicos para IPI.
   
-- **`processar_recolhimentos_pdfs()`**  
+- **`recolhimentos()`**  
   Extrai informações de documentos de recolhimento.
   
-- **`processar_pdfs_ocr_free()`**  
+- **`ocr_free()`**  
   OCR livre para processamento genérico de documentos PDF.
 
 ### 📁 **Organização de Arquivos**
