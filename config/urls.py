@@ -4,8 +4,8 @@ from views.views import *
 
 from views.views_auth import (
     cadastrar_usuario,
-    confirmar_codigo,
-    reenviar_codigo,
+    confirmar_cadastro,
+    reenviar_codigo, login_view,
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -38,7 +38,8 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 
     # Rotas de autenticação
+    path("auth/login/", login_view, name="login"),
     path("auth/cadastrar/", cadastrar_usuario, name="cadastrar_usuario"),
-    path("auth/confirmar/", confirmar_codigo, name="confirmar_codigo"),
+    path("auth/confirmar/", confirmar_cadastro, name="confirmar_cadastro"),
     path("auth/reenviar-codigo/", reenviar_codigo, name="reenviar_codigo"),
 ]

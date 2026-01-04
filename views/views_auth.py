@@ -4,6 +4,21 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from account_tools.utils.utils import validar_email, gerar_codigo, gerar_hash_codigo
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
+def login_view(request):
+    if request.method == "POST":
+        user = authenticate(
+            request,
+            username=request.POST.get("username"),
+            password=request.POST.get("password")
+        )
+        if user:
+            login(request, user)
+            return redirect("home")
+
+    return render(request, "login.html")
 
 def cadastrar_usuario(request):
     if request.method == 'POST':
@@ -50,7 +65,7 @@ def cadastrar_usuario(request):
         request.session['codigo_hora'] = timezone.now().timestamp()
         request.session['email'] = email
 
-        return render(request, 'confirmar_cadastro.html', {'email': email})
+        return redirect('confirmar_cadastro')
 
     return render(request, 'cadastro.html')
 
@@ -74,7 +89,7 @@ def montar_contexto(request, erro_msg=None, sucesso_msg=None, email=None):
     }
 
 
-def confirmar_codigo(request):
+def confirmar_cadastro(request):
     usuario_id = request.session.get('usuario_cadastrado_id')
     email = None
     if usuario_id:
@@ -104,7 +119,7 @@ def confirmar_codigo(request):
             user.is_active = True
             user.save()
             limpar_sessao_confirmacao(request)
-            return render(request, 'confirmar_cadastro.html', montar_contexto(request, sucesso_msg='Cadastro confirmado com sucesso!', email=email))
+            return redirect('home')
 
         request.session['tentativas_confirmacao'] = tentativas + 1
         return render(request, 'confirmar_cadastro.html', montar_contexto(request, f'Código incorreto. Tentativa {tentativas + 1} de 3.', email=email))

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Account Bot{% endblock %}
+
+{% block content %}
+<style>
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 50vh;
+    }
+
+    .login-box {
+        width: 100%;
+        max-width: 380px;
+        padding: 2rem;
+        background-color: #fdfdfd;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-box h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .login-box label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+    }
+
+    .login-box button {
+        width: 100%;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-box">
+        <h2>Login</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="username">Usuário</label>
+            <input type="text" name="username" id="username" required>
+
+            <label for="password">Senha</label>
+            <input type="password" name="password" id="password" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
