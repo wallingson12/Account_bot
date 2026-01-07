@@ -3,8 +3,8 @@ import json
 
 # ========== CONFIGURE AQUI ==========
 BASE_URL = "http://localhost:8000"
-USERNAME = "wallingson"  # ALTERE AQUI
-PASSWORD = "lisagawski"  # ALTERE AQUI
+USERNAME = "usuário"  # ALTERE AQUI
+PASSWORD = "senha"  # ALTERE AQUI
 
 
 # ====================================
