@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'views',
     'account_tools',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -94,6 +95,12 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
+
+SIMPLE_JWT = {
+    'BLACKLIST_AFTER_ROTATION': True,  # Ativa a blacklist de tokens
+    'ROTATE_REFRESH_TOKENS': True,  # Gera um novo refresh token após cada uso
+    'BLACKLIST_TOKEN_TYPES': ('refresh',),  # Revoga apenas os refresh tokens
+}
 
 LANGUAGE_CODE = 'pt-br'
 
